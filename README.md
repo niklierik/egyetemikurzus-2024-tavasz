@@ -1,6 +1,6 @@
 # SZTE egyetemi kurzus, 2024 tavaszi félév házi feleadat repó
 
-Git gyorstalpaló: GitTutorial/README.md
+Git gyorstalpaló: https://github.com/CsharptutorialHungary/egyetemikurzus-2024-tavasz/tree/master/GitTutorial
 
 ## Követelmények
 
