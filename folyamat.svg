@@ -1,0 +1,329 @@
+<svg version="1.1" baseProfile="full" width="479.8" height="1141.5" viewbox="0 0 479.75 1141.5" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
+		<desc >#spacing: 29
+	[&lt;actor&gt;Hallgató] -&gt; [&lt;choice&gt;Ismeri a git-et alap szinten?] -[&lt;label&gt;Igen, ismeri] -&gt; [&lt;choice&gt;Github regisztrációja van?]
+	
+	[&lt;choice&gt;Ismeri a git-et alap szinten?] - [&lt;label&gt;Nem, nem ismeri] - [&lt;state&gt;Git tutorial] -&gt; [&lt;choice&gt;Github regisztrációja van?]
+	
+		[&lt;choice&gt;Github regisztrációja van?] -[&lt;label&gt;Igen] -&gt; [&lt;state&gt;Bejelentkezik]
+		[&lt;choice&gt;Github regisztrációja van?] -[&lt;label&gt;Nem] -&gt; [&lt;state&gt;Regisztrál] -&gt; [&lt;state&gt;Bejelentkezik]
+		[&lt;state&gt;Bejelentkezik] -&gt; [&lt;state&gt;Megkeresi a projekt repository-t] -&gt; [&lt;state&gt;Fork]
+		
+		[&lt;state&gt;Fork] -&gt; [&lt;state&gt;Klónozza a létrejött repót] -&gt; [&lt;choice&gt;Kész a házi?] -[&lt;label&gt;Még nem]-&gt; [&lt;state&gt;Kódol]
+		
+		[&lt;state&gt;Kódol] -&gt; [&lt;state&gt;Commit] -&gt; [&lt;choice&gt;Kész a házi?]
+		
+		[&lt;choice&gt;Kész a házi?] - [&lt;label&gt;Igen, kész] -&gt; [&lt;state&gt;Pull request]
+		
+		[&lt;state&gt;Pull request] -&gt; [&lt;actor&gt;Árpi] -&gt; [&lt;state&gt;Review]
+		[&lt;state&gt;Pull request] -&gt; [&lt;actor&gt;Gábor] -&gt; [&lt;state&gt;Review]
+		
+		[&lt;state&gt;Review] - [&lt;state&gt;Konzultáció &amp; Jegy]-&gt; [&lt;actor&gt;Hallgató]
+		</desc>
+	<g stroke-width="1.0" text-align="left" font="12pt Helvetica, Arial, sans-serif" font-size="12pt" font-family="Helvetica" font-weight="bold" font-style="normal">
+			<g font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" stroke-width="3.0" stroke-linejoin="round" stroke-linecap="round" stroke="#33322E">
+				<g stroke="transparent" fill="transparent">
+					<rect x="0.0" y="0.0" height="1141.5" width="479.8" stroke="none"></rect>
+				</g>
+			<g transform="translate(8, 8)" fill="#33322E">
+					<g transform="translate(20, 20)" fill="#33322E" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal">
+						<path d="M259.3 40.3 L169.5 69.5 L169.5 79.16666666666667 L169.5 79.2 " fill="none"></path>
+					<path d="M165.6 74.3 L169.5 79.2 L173.4 74.3 L169.5 84.0 Z"></path>
+					<path d="M125.9 130.5 L98.75 145 L98.75 175 L98.75 175 L98.75 205 L98.75 205 L98.75 219.5 L98.8 219.5 " fill="none"></path>
+					<path d="M98.8 250.5 L98.75 265 L121.66120798973884 277.224708150002 L121.7 277.2 " fill="none"></path>
+					<path d="M115.6 278.4 L121.7 277.2 L119.2 271.5 L125.9 279.5 Z"></path>
+					<path d="M227.1 130.5 L263 145 L263 159.5 L263.0 159.5 " fill="none"></path>
+					<path d="M263.0 190.5 L263 205 L263 219.5 L263.0 219.5 " fill="none"></path>
+					<path d="M263.0 250.5 L263 265 L231.5679216110858 277.6904915420482 L231.6 277.7 " fill="none"></path>
+					<path d="M234.6 272.3 L231.6 277.7 L237.5 279.5 L227.1 279.5 Z"></path>
+					<path d="M135.3 326.0 L114 340.5 L114 370.5 L114 370.5 L114 400.5 L114 400.5 L114 415 L114.0 415.0 " fill="none"></path>
+					<path d="M114.0 446.0 L114 460.5 L136.57308518438205 472.70166766723355 L136.6 472.7 " fill="none"></path>
+					<path d="M130.5 473.8 L136.6 472.7 L134.2 467.0 L140.8 475.0 Z"></path>
+					<path d="M235.1 326.0 L276 340.5 L276 355 L276.0 355.0 " fill="none"></path>
+					<path d="M276.0 386.0 L276 400.5 L276 410.1666666666667 L276.0 410.2 " fill="none"></path>
+					<path d="M272.1 405.3 L276.0 410.2 L279.9 405.3 L276.0 415.0 Z"></path>
+					<path d="M276.0 446.0 L276 460.5 L229.17727880225067 473.68949892894346 L229.2 473.7 " fill="none"></path>
+					<path d="M232.8 468.7 L229.2 473.7 L234.9 476.1 L224.5 475.0 Z"></path>
+					<path d="M169.5 506.0 L169.5 520.5 L169.5 530.1666666666666 L169.5 530.2 " fill="none"></path>
+					<path d="M165.6 525.3 L169.5 530.2 L173.4 525.3 L169.5 535.0 Z"></path>
+					<path d="M169.5 566.0 L169.5 580.5 L169.5 590.1666666666666 L169.5 590.2 " fill="none"></path>
+					<path d="M165.6 585.3 L169.5 590.2 L173.4 585.3 L169.5 595.0 Z"></path>
+					<path d="M169.5 626.0 L169.5 640.5 L169.5 650.1666666666666 L169.5 650.2 " fill="none"></path>
+					<path d="M165.6 645.3 L169.5 650.2 L173.4 645.3 L169.5 655.0 Z"></path>
+					<path d="M169.5 686.0 L169.5 700.5 L169.5 710.1666666666666 L169.5 710.2 " fill="none"></path>
+					<path d="M165.6 705.3 L169.5 710.2 L173.4 705.3 L169.5 715.0 Z"></path>
+					<path d="M125.5 761.5 L98 776 L98 790.5 L98.0 790.5 " fill="none"></path>
+					<path d="M98.0 821.5 L98 836 L98 845.6666666666666 L98.0 845.7 " fill="none"></path>
+					<path d="M94.1 840.8 L98.0 845.7 L101.9 840.8 L98.0 850.5 Z"></path>
+					<path d="M98.0 881.5 L98 896 L105.17179075570765 917.9065608537978 L105.2 917.9 " fill="none"></path>
+					<path d="M100.0 914.5 L105.2 917.9 L107.3 912.1 L106.7 922.5 Z"></path>
+					<path d="M133.1 922.5 L169.5 896 L169.5 866 L169.5 866 L169.5 836 L169.5 836 L169.5 806 L169.5 806 L169.5 776 L169.5 776 L169.5 766.3333333333334 L169.5 766.3 " fill="none"></path>
+					<path d="M173.4 771.2 L169.5 766.3 L165.6 771.2 L169.5 761.5 Z"></path>
+					<path d="M230.0 761.5 L267.75 776 L267.75 790.5 L267.8 790.5 " fill="none"></path>
+					<path d="M267.8 821.5 L267.75 836 L267.75 845.6666666666666 L267.8 845.7 " fill="none"></path>
+					<path d="M263.9 840.8 L267.8 845.7 L271.6 840.8 L267.8 850.5 Z"></path>
+					<path d="M261.9 881.5 L256.5 896 L256.5 905.6666666666666 L256.5 905.7 " fill="none"></path>
+					<path d="M252.6 900.8 L256.5 905.7 L260.4 900.8 L256.5 910.5 Z"></path>
+					<path d="M256.5 965.5 L256.5 980 L260.2404033656561 989.974408975083 L260.2 990.0 " fill="none"></path>
+					<path d="M254.9 986.8 L260.2 990.0 L262.2 984.1 L261.9 994.5 Z"></path>
+					<path d="M305.6 881.5 L341 896 L341 905.6666666666666 L341.0 905.7 " fill="none"></path>
+					<path d="M337.1 900.8 L341.0 905.7 L344.9 900.8 L341.0 910.5 Z"></path>
+					<path d="M341.0 965.5 L341 980 L307.72274710505525 993.6289090354722 L307.7 993.6 " fill="none"></path>
+					<path d="M310.7 988.2 L307.7 993.6 L313.7 995.4 L303.3 995.5 Z"></path>
+					<path d="M267.8 1025.5 L267.75 1040 L303.51666666666665 1054.5 L303.5 1054.5 " fill="none"></path>
+					<path d="M379.2 1054.5 L414.25 1040 L414.25 1010 L414.25 1010 L414.25 980 L414.25 980 L414.25 938 L414.25 938 L414.25 896 L414.25 896 L414.25 866 L414.25 866 L414.25 836 L414.25 836 L414.25 806 L414.25 806 L414.25 776 L414.25 776 L414.25 738.25 L414.25 738.25 L414.25 700.5 L414.25 700.5 L414.25 670.5 L414.25 670.5 L414.25 640.5 L414.25 640.5 L414.25 610.5 L414.25 610.5 L414.25 580.5 L414.25 580.5 L414.25 550.5 L414.25 550.5 L414.25 520.5 L414.25 520.5 L414.25 490.5 L414.25 490.5 L414.25 460.5 L414.25 460.5 L414.25 430.5 L414.25 430.5 L414.25 400.5 L414.25 400.5 L414.25 370.5 L414.25 370.5 L414.25 340.5 L414.25 340.5 L414.25 302.75 L414.25 302.75 L414.25 265 L414.25 265 L414.25 235 L414.25 235 L414.25 205 L414.25 205 L414.25 175 L414.25 175 L414.25 145 L414.25 145 L414.25 107.25 L414.25 107.25 L414.25 69.5 L414.25 69.5 L342.7923348801941 43.515394501888764 L342.8 43.5 " fill="none"></path>
+					<path d="M348.7 41.5 L342.8 43.5 L346.0 48.8 L338.3 41.9 Z"></path>
+					<g data-name="Hallgató">
+							<g fill="#eee8d5" stroke="#33322E" data-name="Hallgató">
+								<circle r="4.0" cx="298.8" cy="12.0" data-name="Hallgató"></circle>
+							<path d="M298.8 16.0 L298.8 24.0" fill="none" data-name="Hallgató"></path>
+							<path d="M294.8 20.0 L302.8 20.0" fill="none" data-name="Hallgató"></path>
+							<path d="M294.8 28.0 L298.8 24.0 L302.8 28.0" fill="none" data-name="Hallgató"></path>
+							</g>
+						<g transform="translate(259.25, 24)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Hallgató">
+								<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Hallgató">
+									<text x="31.5" y="13.5" stroke="none" text-anchor="middle" data-name="Hallgató">Hallgató</text>
+								
+								</g>
+							</g>
+						</g>
+					<g data-name="Ismeri a git-et alap szinten?">
+							<g fill="#eee8d5" stroke="#33322E" data-name="Ismeri a git-et alap szinten?">
+								<path d="M169.5 84.0 L339.0 107.3 L169.5 130.5 L0.0 107.3 Z" data-name="Ismeri a git-et alap szinten?"></path>
+							</g>
+						<g transform="translate(56.5, 91.75)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Ismeri a git-et alap szinten?">
+								<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Ismeri a git-et alap szinten?">
+									<text x="105.0" y="13.5" stroke="none" text-anchor="middle" data-name="Ismeri a git-et alap szinten?">Ismeri a git-et alap szinten?</text>
+								
+								</g>
+							</g>
+						</g>
+					<g data-name="Igen, ismeri">
+							
+						<g transform="translate(46.25, 219.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Igen, ismeri">
+								<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Igen, ismeri">
+									<text x="44.5" y="13.5" stroke="none" text-anchor="middle" data-name="Igen, ismeri">Igen, ismeri</text>
+								
+								</g>
+							</g>
+						</g>
+					<g data-name="Github regisztrációja van?">
+							<g fill="#eee8d5" stroke="#33322E" data-name="Github regisztrációja van?">
+								<path d="M169.5 279.5 L332.3 302.8 L169.5 326.0 L6.8 302.8 Z" data-name="Github regisztrációja van?"></path>
+							</g>
+						<g transform="translate(61, 287.25)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Github regisztrációja van?">
+								<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Github regisztrációja van?">
+									<text x="100.5" y="13.5" stroke="none" text-anchor="middle" data-name="Github regisztrációja van?">Github regisztrációja van?</text>
+								
+								</g>
+							</g>
+						</g>
+					<g data-name="Nem, nem ismeri">
+							
+						<g transform="translate(191, 159.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Nem, nem ismeri">
+								<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Nem, nem ismeri">
+									<text x="64.0" y="13.5" stroke="none" text-anchor="middle" data-name="Nem, nem ismeri">Nem, nem ismeri</text>
+								
+								</g>
+							</g>
+						</g>
+					<g data-name="Git tutorial">
+							<g fill="#eee8d5" stroke="#33322E" data-name="Git tutorial">
+								<rect x="214.5" y="219.5" rx="15.5" ry="15.5" height="31.0" width="97.0" data-name="Git tutorial"></rect>
+							</g>
+						<g transform="translate(214.5, 219.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Git tutorial">
+								<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Git tutorial">
+									<text x="40.5" y="13.5" stroke="none" text-anchor="middle" data-name="Git tutorial">Git tutorial</text>
+								
+								</g>
+							</g>
+						</g>
+					<g data-name="Igen">
+							
+						<g transform="translate(89.5, 415)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Igen">
+								<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Igen">
+									<text x="16.5" y="13.5" stroke="none" text-anchor="middle" data-name="Igen">Igen</text>
+								
+								</g>
+							</g>
+						</g>
+					<g data-name="Bejelentkezik">
+							<g fill="#eee8d5" stroke="#33322E" data-name="Bejelentkezik">
+								<rect x="111.0" y="475.0" rx="15.5" ry="15.5" height="31.0" width="117.0" data-name="Bejelentkezik"></rect>
+							</g>
+						<g transform="translate(111, 475)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Bejelentkezik">
+								<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Bejelentkezik">
+									<text x="50.5" y="13.5" stroke="none" text-anchor="middle" data-name="Bejelentkezik">Bejelentkezik</text>
+								
+								</g>
+							</g>
+						</g>
+					<g data-name="Nem">
+							
+						<g transform="translate(250.5, 355)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Nem">
+								<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Nem">
+									<text x="17.5" y="13.5" stroke="none" text-anchor="middle" data-name="Nem">Nem</text>
+								
+								</g>
+							</g>
+						</g>
+					<g data-name="Regisztrál">
+							<g fill="#eee8d5" stroke="#33322E" data-name="Regisztrál">
+								<rect x="230.0" y="415.0" rx="15.5" ry="15.5" height="31.0" width="92.0" data-name="Regisztrál"></rect>
+							</g>
+						<g transform="translate(230, 415)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Regisztrál">
+								<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Regisztrál">
+									<text x="38.0" y="13.5" stroke="none" text-anchor="middle" data-name="Regisztrál">Regisztrál</text>
+								
+								</g>
+							</g>
+						</g>
+					<g data-name="Megkeresi a projekt repository-t">
+							<g fill="#eee8d5" stroke="#33322E" data-name="Megkeresi a projekt repository-t">
+								<rect x="40.0" y="535.0" rx="15.5" ry="15.5" height="31.0" width="259.0" data-name="Megkeresi a projekt repository-t"></rect>
+							</g>
+						<g transform="translate(40, 535)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Megkeresi a projekt repository-t">
+								<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Megkeresi a projekt repository-t">
+									<text x="121.5" y="13.5" stroke="none" text-anchor="middle" data-name="Megkeresi a projekt repository-t">Megkeresi a projekt repository-t</text>
+								
+								</g>
+							</g>
+						</g>
+					<g data-name="Fork">
+							<g fill="#eee8d5" stroke="#33322E" data-name="Fork">
+								<rect x="144.0" y="595.0" rx="15.5" ry="15.5" height="31.0" width="51.0" data-name="Fork"></rect>
+							</g>
+						<g transform="translate(144, 595)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Fork">
+								<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Fork">
+									<text x="17.5" y="13.5" stroke="none" text-anchor="middle" data-name="Fork">Fork</text>
+								
+								</g>
+							</g>
+						</g>
+					<g data-name="Klónozza a létrejött repót">
+							<g fill="#eee8d5" stroke="#33322E" data-name="Klónozza a létrejött repót">
+								<rect x="66.0" y="655.0" rx="15.5" ry="15.5" height="31.0" width="207.0" data-name="Klónozza a létrejött repót"></rect>
+							</g>
+						<g transform="translate(66, 655)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Klónozza a létrejött repót">
+								<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Klónozza a létrejött repót">
+									<text x="95.5" y="13.5" stroke="none" text-anchor="middle" data-name="Klónozza a létrejött repót">Klónozza a létrejött repót</text>
+								
+								</g>
+							</g>
+						</g>
+					<g data-name="Kész a házi?">
+							<g fill="#eee8d5" stroke="#33322E" data-name="Kész a házi?">
+								<path d="M169.5 715.0 L253.5 738.3 L169.5 761.5 L85.5 738.3 Z" data-name="Kész a házi?"></path>
+							</g>
+						<g transform="translate(113.5, 722.75)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Kész a házi?">
+								<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Kész a házi?">
+									<text x="48.0" y="13.5" stroke="none" text-anchor="middle" data-name="Kész a házi?">Kész a házi?</text>
+								
+								</g>
+							</g>
+						</g>
+					<g data-name="Még nem">
+							
+						<g transform="translate(55.5, 790.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Még nem">
+								<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Még nem">
+									<text x="34.5" y="13.5" stroke="none" text-anchor="middle" data-name="Még nem">Még nem</text>
+								
+								</g>
+							</g>
+						</g>
+					<g data-name="Kódol">
+							<g fill="#eee8d5" stroke="#33322E" data-name="Kódol">
+								<rect x="67.5" y="850.5" rx="15.5" ry="15.5" height="31.0" width="61.0" data-name="Kódol"></rect>
+							</g>
+						<g transform="translate(67.5, 850.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Kódol">
+								<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Kódol">
+									<text x="22.5" y="13.5" stroke="none" text-anchor="middle" data-name="Kódol">Kódol</text>
+								
+								</g>
+							</g>
+						</g>
+					<g data-name="Commit">
+							<g fill="#eee8d5" stroke="#33322E" data-name="Commit">
+								<rect x="73.8" y="922.5" rx="15.5" ry="15.5" height="31.0" width="76.0" data-name="Commit"></rect>
+							</g>
+						<g transform="translate(73.75, 922.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Commit">
+								<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Commit">
+									<text x="30.0" y="13.5" stroke="none" text-anchor="middle" data-name="Commit">Commit</text>
+								
+								</g>
+							</g>
+						</g>
+					<g data-name="Igen, kész">
+							
+						<g transform="translate(221.75, 790.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Igen, kész">
+								<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Igen, kész">
+									<text x="38.0" y="13.5" stroke="none" text-anchor="middle" data-name="Igen, kész">Igen, kész</text>
+								
+								</g>
+							</g>
+						</g>
+					<g data-name="Pull request">
+							<g fill="#eee8d5" stroke="#33322E" data-name="Pull request">
+								<rect x="213.8" y="850.5" rx="15.5" ry="15.5" height="31.0" width="108.0" data-name="Pull request"></rect>
+							</g>
+						<g transform="translate(213.75, 850.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Pull request">
+								<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Pull request">
+									<text x="46.0" y="13.5" stroke="none" text-anchor="middle" data-name="Pull request">Pull request</text>
+								
+								</g>
+							</g>
+						</g>
+					<g data-name="Árpi">
+							<g fill="#eee8d5" stroke="#33322E" data-name="Árpi">
+								<circle r="4.0" cx="256.5" cy="922.5" data-name="Árpi"></circle>
+							<path d="M256.5 926.5 L256.5 934.5" fill="none" data-name="Árpi"></path>
+							<path d="M252.5 930.5 L260.5 930.5" fill="none" data-name="Árpi"></path>
+							<path d="M252.5 938.5 L256.5 934.5 L260.5 938.5" fill="none" data-name="Árpi"></path>
+							</g>
+						<g transform="translate(232.5, 934.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Árpi">
+								<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Árpi">
+									<text x="16.0" y="13.5" stroke="none" text-anchor="middle" data-name="Árpi">Árpi</text>
+								
+								</g>
+							</g>
+						</g>
+					<g data-name="Review">
+							<g fill="#eee8d5" stroke="#33322E" data-name="Review">
+								<rect x="232.3" y="994.5" rx="15.5" ry="15.5" height="31.0" width="71.0" data-name="Review"></rect>
+							</g>
+						<g transform="translate(232.25, 994.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Review">
+								<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Review">
+									<text x="27.5" y="13.5" stroke="none" text-anchor="middle" data-name="Review">Review</text>
+								
+								</g>
+							</g>
+						</g>
+					<g data-name="Gábor">
+							<g fill="#eee8d5" stroke="#33322E" data-name="Gábor">
+								<circle r="4.0" cx="341.0" cy="922.5" data-name="Gábor"></circle>
+							<path d="M341.0 926.5 L341.0 934.5" fill="none" data-name="Gábor"></path>
+							<path d="M337.0 930.5 L345.0 930.5" fill="none" data-name="Gábor"></path>
+							<path d="M337.0 938.5 L341.0 934.5 L345.0 938.5" fill="none" data-name="Gábor"></path>
+							</g>
+						<g transform="translate(309.5, 934.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Gábor">
+								<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Gábor">
+									<text x="23.5" y="13.5" stroke="none" text-anchor="middle" data-name="Gábor">Gábor</text>
+								
+								</g>
+							</g>
+						</g>
+					<g data-name="Konzultáció &amp; Jegy">
+							<g fill="#eee8d5" stroke="#33322E" data-name="Konzultáció &amp; Jegy">
+								<rect x="259.8" y="1054.5" rx="15.5" ry="15.5" height="31.0" width="164.0" data-name="Konzultáció &amp; Jegy"></rect>
+							</g>
+						<g transform="translate(259.75, 1054.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Konzultáció &amp; Jegy">
+								<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Konzultáció &amp; Jegy">
+									<text x="74.0" y="13.5" stroke="none" text-anchor="middle" data-name="Konzultáció &amp; Jegy">Konzultáció &amp; Jegy</text>
+								
+								</g>
+							</g>
+						</g>
+					</g>
+				</g>
+			</g>
+		</g>
+	</svg>
