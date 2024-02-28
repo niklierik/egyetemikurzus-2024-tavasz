@@ -5,6 +5,8 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoveLetter", "Q7VQV4\LoveLetter\LoveLetter.csproj", "{20B97AAC-D8AE-4E52-B039-CEC7AF824BD6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoveLetterTests", "Q7VQV4\LoveLetterTests\LoveLetterTests.csproj", "{E76EA77F-24E1-416A-91A6-F22B4B7C373B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{20B97AAC-D8AE-4E52-B039-CEC7AF824BD6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{20B97AAC-D8AE-4E52-B039-CEC7AF824BD6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{20B97AAC-D8AE-4E52-B039-CEC7AF824BD6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E76EA77F-24E1-416A-91A6-F22B4B7C373B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E76EA77F-24E1-416A-91A6-F22B4B7C373B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E76EA77F-24E1-416A-91A6-F22B4B7C373B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E76EA77F-24E1-416A-91A6-F22B4B7C373B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
