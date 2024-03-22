@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Text;
@@ -12,10 +13,10 @@ namespace Shell.UserInterface
 {
     internal class Ui
     {
-        private readonly CommandProvider _commandProvider;
+        private readonly ICommandProvider _commandProvider;
         private readonly IHost _host;
 
-        public Ui(CommandProvider commandProvider, IHost host)
+        public Ui(ICommandProvider commandProvider, IHost host)
         {
             _commandProvider = commandProvider;
             _host = host;
@@ -25,13 +26,21 @@ namespace Shell.UserInterface
         {
             while (true)
             {
+                _host.Write("> ");
                 string input = _host.ReadLine();
                 string[] splittedInput = input.Split(' ');
                 IShellCommand? commandToExecute = FindCommandName(splittedInput[0]);
                 if (commandToExecute != null)
                 {
-                    //TODO: Folytatni
-                    commandToExecute.Execute();
+                    try
+                    {
+                        commandToExecute.Execute(_host, splittedInput);
+                    }
+                    catch (Exception ex)
+                    {
+                        _host.WriteLine("Hiba történt");
+                        Trace.WriteLine(ex, "commandexception");
+                    }
                 }  
             }
         }
