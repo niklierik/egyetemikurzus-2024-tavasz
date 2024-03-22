@@ -9,11 +9,12 @@ using Shell.Infrastructure;
 
 namespace Shell.UserInterface
 {
-    internal class CommandProvider
+    [Obsolete]
+    internal class CommandProvider : ICommandProvider
     {
         public IShellCommand[] Commands
         {
-            get;  
+            get;
         }
 
         public CommandProvider()
@@ -21,6 +22,7 @@ namespace Shell.UserInterface
             Commands = new IShellCommand[]
                 {
                     new ExitCommand(),
+                    new HelloCommand(),
                 };
         }
     }

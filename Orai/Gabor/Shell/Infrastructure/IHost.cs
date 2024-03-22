@@ -15,6 +15,8 @@ namespace Shell.Infrastructure
     {
         string ReadLine();
         void WriteLine(string message);
+        void Write(string message)
+            => Console.Write(message);
         void Exit();
     }
 }
