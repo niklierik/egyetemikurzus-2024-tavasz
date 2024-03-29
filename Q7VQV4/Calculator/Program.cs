@@ -36,7 +36,6 @@ public static class Program
             {
                 host.WriteLine(exception, ConsoleColor.Red);
             }
-
         }
     }
 }

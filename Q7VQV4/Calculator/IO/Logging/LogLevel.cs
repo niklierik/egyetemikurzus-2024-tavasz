@@ -23,5 +23,4 @@ public static class LogLevelHelper
             _ => ConsoleColor.White
         };
     }
-
 }

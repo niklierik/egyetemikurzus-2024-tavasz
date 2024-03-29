@@ -14,9 +14,7 @@ public class LogManager(ICollection<ILogTarget> logTargets) : ILogManager
         }
 
         await Task.WhenAll(
-            LogTargets.Select(
-                logTarget => logTarget.Log(logLevel, message, exception)
-            )
+            LogTargets.Select(logTarget => logTarget.Log(logLevel, message, exception))
         );
     }
 

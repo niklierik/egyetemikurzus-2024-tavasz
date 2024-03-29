@@ -1,5 +1,4 @@
 using System.Globalization;
-
 using Calculator.Syntax.Tokens;
 
 namespace Calculator.Syntax.Lexing;
@@ -111,7 +110,6 @@ public class Lexer : ILexer
         }
     }
 
-
     private ISyntaxToken LexBadToken()
     {
         BadToken badToken = new BadToken(_text[_currentPosition].ToString());
@@ -136,7 +134,6 @@ public class Lexer : ILexer
 
         return token;
     }
-
 
     public IReadOnlyList<ISyntaxToken> LexString(string text, bool filterWhitespace = false)
     {

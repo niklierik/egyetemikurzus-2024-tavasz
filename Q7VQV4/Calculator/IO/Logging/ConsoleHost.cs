@@ -2,7 +2,6 @@ namespace Calculator.IO.Logging;
 
 public class ConsoleHost : IHost, ILogTarget
 {
-
     public void Write(object? message)
     {
         Console.Write(message);
@@ -25,14 +24,17 @@ public class ConsoleHost : IHost, ILogTarget
         Console.WriteLine(message);
     }
 
-
     public void WriteLine(object? message, ConsoleColor foregroundColor)
     {
         Console.ForegroundColor = foregroundColor;
         WriteLine(message);
     }
 
-    public void WriteLine(object? message, ConsoleColor foregroundColor, ConsoleColor backgroundColor)
+    public void WriteLine(
+        object? message,
+        ConsoleColor foregroundColor,
+        ConsoleColor backgroundColor
+    )
     {
         Console.BackgroundColor = backgroundColor;
         WriteLine(message, foregroundColor);
@@ -64,5 +66,4 @@ public class ConsoleHost : IHost, ILogTarget
 
         return Task.CompletedTask;
     }
-
 }
