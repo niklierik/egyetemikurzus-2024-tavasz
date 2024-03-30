@@ -1,6 +1,6 @@
 namespace Calculator.Syntax.Tokens;
 
-public class AddToken : IOperandToken
+public class AddToken : IOperandToken, IBinaryOperandToken, IUnaryOperandToken
 {
     public ConsoleColor DebugColor => ConsoleColor.Yellow;
 
