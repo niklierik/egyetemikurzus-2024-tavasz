@@ -1,6 +1,6 @@
 namespace Calculator.Syntax.Tokens;
 
-public interface ILiteralToken<T> : ISyntaxToken
+public interface ILiteralToken<T> : ISyntaxToken, IOperandToken
 {
     public T Value { get; }
 

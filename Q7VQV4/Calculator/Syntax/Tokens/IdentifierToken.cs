@@ -1,6 +1,6 @@
 namespace Calculator.Syntax.Tokens;
 
-public class IdentifierToken(string content) : ISyntaxToken
+public class IdentifierToken(string content) : ISyntaxToken, IOperandToken
 {
     public string Content { get; } = content;
 

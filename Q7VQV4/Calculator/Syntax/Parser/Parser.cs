@@ -5,13 +5,14 @@ using Calculator.Syntax.Tokens;
 namespace Calculator.Syntax.Parser;
 
 // TODO: remove state
-public class Parser() : IParser
+public class Parser : IParser
 {
     private IReadOnlyList<ISyntaxToken> _tokens = Enumerable.Empty<ISyntaxToken>().ToList();
     private int _position = 0;
-    private int _minOperandPrio = -1;
-    private int _maxOperandPrio = -1;
-    private bool _hasOperands = false;
+    private int _minOperatorPriority = int.MaxValue;
+    private int _maxOperatorPriority = int.MinValue;
+    private bool _hasBinaryOperator = false;
+    private bool _hasUnaryOperator = false;
 
     public RootNode Parse(IReadOnlyList<ISyntaxToken> tokens)
     {
@@ -25,18 +26,8 @@ public class Parser() : IParser
                 return new RootNode([]);
             }
 
-            var operandsByPrio = _tokens
-                .Where(token => token is IOperandToken)
-                .Cast<IOperandToken>()
-                .Select(operand => operand.Priority);
+            SetOperatorInfos();
 
-            _hasOperands = operandsByPrio.Any();
-
-            if (_hasOperands)
-            {
-                _minOperandPrio = operandsByPrio.Min();
-                _maxOperandPrio = operandsByPrio.Max();
-            }
             var list = new List<ISyntaxNode>();
 
             while (true)
@@ -60,10 +51,40 @@ public class Parser() : IParser
         finally
         {
             _position = 0;
-            _minOperandPrio = -1;
-            _maxOperandPrio = -1;
-            _hasOperands = false;
             _tokens = Enumerable.Empty<ISyntaxToken>().ToList();
+            _minOperatorPriority = int.MaxValue;
+            _maxOperatorPriority = int.MinValue;
+            _hasBinaryOperator = false;
+            _hasUnaryOperator = false;
+        }
+    }
+
+    private void SetOperatorInfos()
+    {
+        var binaryOperandsByPriority = _tokens
+            .Where(token => token is IBinaryOperatorToken)
+            .Cast<IBinaryOperatorToken>()
+            .Select(operand => operand.BinaryPriority);
+
+        _hasBinaryOperator = binaryOperandsByPriority.Any();
+
+        if (_hasBinaryOperator)
+        {
+            _minOperatorPriority = binaryOperandsByPriority.Min();
+            _maxOperatorPriority = binaryOperandsByPriority.Max();
+        }
+
+        var unaryOperandsByPriority = _tokens
+            .Where(token => token is IUnaryOperatorToken)
+            .Cast<IUnaryOperatorToken>()
+            .Select(operand => operand.UnaryPriority);
+
+        _hasUnaryOperator = unaryOperandsByPriority.Any();
+
+        if (_hasUnaryOperator)
+        {
+            _minOperatorPriority = Math.Min(unaryOperandsByPriority.Min(), _minOperatorPriority);
+            _maxOperatorPriority = Math.Max(unaryOperandsByPriority.Max(), _maxOperatorPriority);
         }
     }
 
@@ -74,10 +95,10 @@ public class Parser() : IParser
             return null;
         }
 
-        return ParseNext(_minOperandPrio);
+        return ParseNext(_minOperatorPriority);
     }
 
-    private ISyntaxNode? ParseNext(int prio)
+    private ISyntaxNode? ParseNext(int priorityLevel)
     {
         if (_position >= _tokens.Count)
         {
@@ -85,7 +106,9 @@ public class Parser() : IParser
         }
 
         ISyntaxNode? syntaxNode = null;
-        syntaxNode ??= ParseBinaryExpression(prio);
+
+        syntaxNode ??= ParseBinaryExpression(priorityLevel);
+        syntaxNode ??= ParseUnaryExpression(priorityLevel);
         syntaxNode ??= ParseLeaf();
         return syntaxNode;
     }
@@ -101,42 +124,98 @@ public class Parser() : IParser
         return new LeafNode(token);
     }
 
-    private ISyntaxNode? ParseBinaryExpression(int level)
+    private ISyntaxNode? ParseUnaryExpression(int priorityLevel)
     {
-        if (!_hasOperands)
+        if (!_hasUnaryOperator)
         {
             return null;
         }
-        if (level > _maxOperandPrio)
+        if (priorityLevel > _maxOperatorPriority)
         {
             return null;
         }
-        ISyntaxNode? left = ParseNext(level + 1);
-        if (left is null)
+        LeafNode? @operator = ParseLeaf();
+        if (@operator is null)
         {
+            return null;
+        }
+        ISyntaxToken token = @operator.Token;
+        if (token is not IUnaryOperatorToken operandToken)
+        {
+            _position--;
+            return null;
+        }
+        if (operandToken.UnaryPriority < priorityLevel)
+        {
+            _position--;
             return null;
         }
 
-        LeafNode? operand = ParseLeaf();
+        var operand = ParseNext(priorityLevel);
 
         if (operand is null)
         {
-            return left;
+            _position--;
+            return null;
         }
 
-        if (operand.LiteralToken is not IOperandToken operandToken || operandToken.Priority < level)
+        if (operand is LeafNode leaf && leaf.Token is not IOperandToken)
         {
             _position--;
-            return left;
+            return null;
         }
 
-        ISyntaxNode? right = ParseNext(level);
+        return new UnaryExpressionNode(@operator, operand);
+    }
 
-        if (right is null)
+    private ISyntaxNode? ParseBinaryExpression(int priorityLevel)
+    {
+        if (!_hasBinaryOperator)
+        {
+            return null;
+        }
+        if (priorityLevel > _maxOperatorPriority)
+        {
+            return null;
+        }
+        ISyntaxNode? leftOperand = ParseNext(priorityLevel + 1);
+        if (leftOperand is null)
+        {
+            return null;
+        }
+
+        if (leftOperand is LeafNode leaf && leaf.Token is not IOperandToken)
+        {
+            _position--;
+            return null;
+        }
+
+        LeafNode? @operator = ParseLeaf();
+
+        if (@operator is null)
+        {
+            return leftOperand;
+        }
+
+        if (
+            @operator.Token is not IBinaryOperatorToken operandToken
+            || operandToken.BinaryPriority < priorityLevel
+        )
+        {
+            _position--;
+            return leftOperand;
+        }
+
+        ISyntaxNode? rightOperand = ParseNext(priorityLevel);
+
+        if (
+            rightOperand is null
+            || (rightOperand is LeafNode rightLeaf && rightLeaf.Token is not IOperandToken)
+        )
         {
             throw new SyntaxException("Unable to parse Binary Expression. Missing right.");
         }
 
-        return new BinaryExpressionNode(left, operand, right);
+        return new BinaryExpressionNode(leftOperand, @operator, rightOperand);
     }
 }

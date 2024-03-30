@@ -1,10 +1,10 @@
 namespace Calculator.Syntax.Tokens;
 
-public class DivideToken : IOperandToken, IBinaryOperandToken
+public class DivideToken : IBinaryOperatorToken
 {
     public ConsoleColor DebugColor => ConsoleColor.Yellow;
 
-    public int Priority => 1;
+    public int BinaryPriority => 1;
 
     public override string ToString() => "/";
 }
