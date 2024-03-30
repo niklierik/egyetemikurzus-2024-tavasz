@@ -2,5 +2,5 @@ namespace Calculator.Syntax;
 
 public interface ISyntaxToken
 {
-    ConsoleColor DebugColor => ConsoleColor.White;
+    ConsoleColor DebugColor { get; }
 }

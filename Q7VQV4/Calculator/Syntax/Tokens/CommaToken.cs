@@ -1,6 +1,10 @@
+using Calculator.Syntax;
+
 namespace Calculator.IO.Logging;
 
-public class CommaToken
+public class CommaToken : ISyntaxToken
 {
-    public CommaToken() { }
+    public ConsoleColor DebugColor => ConsoleColor.DarkGray;
+
+    public override string ToString() => ",";
 }
