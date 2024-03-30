@@ -4,6 +4,7 @@ using Calculator.Syntax.Tokens;
 
 namespace Calculator.Syntax.Lexing;
 
+// TODO: remove state
 public class Lexer : ILexer
 {
     private int _currentPosition = 0;
@@ -138,26 +139,34 @@ public class Lexer : ILexer
 
     public IReadOnlyList<ISyntaxToken> LexString(string text, bool filterWhitespace = false)
     {
-        if (string.IsNullOrWhiteSpace(text))
+        try
         {
-            return [new EndToken(true)];
-        }
-
-        _currentPosition = 0;
-        _text = text;
-
-        var list = new List<ISyntaxToken>();
-
-        while (list.LastOrDefault() is not EndToken)
-        {
-            var nextToken = NextToken();
-
-            if (!filterWhitespace || nextToken is not WhitespaceToken)
+            if (string.IsNullOrWhiteSpace(text))
             {
-                list.Add(nextToken);
+                return [new EndToken(true)];
             }
-        }
 
-        return list;
+            _currentPosition = 0;
+            _text = text;
+
+            var list = new List<ISyntaxToken>();
+
+            while (list.LastOrDefault() is not EndToken)
+            {
+                var nextToken = NextToken();
+
+                if (!filterWhitespace || nextToken is not WhitespaceToken)
+                {
+                    list.Add(nextToken);
+                }
+            }
+
+            return list;
+        }
+        finally
+        {
+            _currentPosition = 0;
+            _text = "";
+        }
     }
 }
