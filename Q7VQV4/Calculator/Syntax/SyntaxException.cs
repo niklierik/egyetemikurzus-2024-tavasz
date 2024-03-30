@@ -1,3 +1,5 @@
+using Calculator.Source;
+
 namespace Calculator.Syntax.Tokens;
 
 public class SyntaxException : Exception

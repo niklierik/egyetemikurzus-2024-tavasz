@@ -1,4 +1,4 @@
-namespace Calculator.Syntax.Tokens;
+namespace Calculator.Source;
 
 public record TextSlice(string Text, int Start, int End)
 {
