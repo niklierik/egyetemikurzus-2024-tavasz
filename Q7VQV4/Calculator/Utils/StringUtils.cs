@@ -22,4 +22,9 @@ public static class StringUtils
 
         return str;
     }
+
+    public static string Stringify(this object? o)
+    {
+        return o?.ToString() ?? "null";
+    }
 }
