@@ -31,7 +31,7 @@ public class Interpreter(
 
     public async Task Init()
     {
-        _state = await _stateProvider.LoadState("init.json");
+        _state = await _stateProvider.LoadState("interp.json");
     }
 
     public InterpreterState State
