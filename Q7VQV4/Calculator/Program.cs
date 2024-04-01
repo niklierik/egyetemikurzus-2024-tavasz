@@ -4,6 +4,7 @@ using Calculator.Evaluators.ExpressionEvals;
 using Calculator.Interpreters;
 using Calculator.IO;
 using Calculator.IO.Logging;
+using Calculator.State;
 using Calculator.Syntax.Lexing;
 using Calculator.Syntax.Parser;
 using Microsoft.Extensions.DependencyInjection;
@@ -40,7 +41,9 @@ hostApplicationBuilder.Services.AddSingleton<IHost, ConsoleHost>();
 hostApplicationBuilder.Services.AddSingleton<ILogManager, LogManager>();
 hostApplicationBuilder.Services.AddSingleton<ILogTargetProvider, LogTargetProvider>();
 hostApplicationBuilder.Services.AddSingleton<INodePrettyPrinter, NodePrettyPrinter>();
-hostApplicationBuilder.Services.AddSingleton<IInterpreter, Interpreter>();
+hostApplicationBuilder.Services.AddSingleton<IInterpreter<InterpreterState>, Interpreter>();
+hostApplicationBuilder.Services.AddSingleton<IJsonService, JsonService>();
+hostApplicationBuilder.Services.AddSingleton<IStateLoader<InterpreterState>, StateLoader>();
 
 using var app = hostApplicationBuilder.Build();
 

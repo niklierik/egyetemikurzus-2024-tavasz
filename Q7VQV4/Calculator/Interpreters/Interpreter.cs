@@ -2,6 +2,7 @@ using System.Text;
 using Calculator.Evaluators;
 using Calculator.IO;
 using Calculator.IO.Logging;
+using Calculator.State;
 using Calculator.Syntax.AST;
 using Calculator.Syntax.Lexing;
 using Calculator.Syntax.Parser;
@@ -15,15 +16,35 @@ public class Interpreter(
     IEvaluator evaluator,
     ILogManager logger,
     INodePrettyPrinter nodePrettyPrinter,
-    IHost host
-) : IInterpreter
+    IHost host,
+    IStateLoader<InterpreterState> stateProvider
+) : IInterpreter<InterpreterState>
 {
     private readonly ILexer _lexer = lexer;
     private readonly IParser _parser = parser;
     private readonly IEvaluator _evaluator = evaluator;
     private readonly ILogManager _logger = logger;
     private readonly IHost _host = host;
-    private bool printAstToConsole = false;
+    private readonly IStateLoader<InterpreterState> _stateProvider = stateProvider;
+
+    private InterpreterState? _state;
+
+    public async Task Init()
+    {
+        _state = await _stateProvider.LoadState("init.json");
+    }
+
+    public InterpreterState State
+    {
+        get
+        {
+            if (_state is null)
+            {
+                throw new InvalidOperationException("Tried to access state before it was loaded.");
+            }
+            return _state;
+        }
+    }
 
     public async Task<object?> Execute(string line)
     {
@@ -41,7 +62,7 @@ public class Interpreter(
                 ast,
                 (text, color) =>
                 {
-                    if (printAstToConsole)
+                    if (State.PrintAstToConsole)
                     {
                         _host.Write(text, color);
                     }
