@@ -6,32 +6,35 @@ public class NodePrettyPrinter(IHost host) : INodePrettyPrinter
 {
     private readonly IHost _host = host;
 
-    public void Print(ISyntaxNode node)
+    public async Task Print(ISyntaxNode node, Printer printer)
     {
-        Print(node, "", true);
+        await Print(node, printer, "", true);
     }
 
     // https://stackoverflow.com/questions/1649027/how-do-i-print-out-a-tree-structure
-    private void Print(ISyntaxNode node, string prefix, bool last)
+    private async Task Print(ISyntaxNode node, Printer printer, string prefix, bool last)
     {
-        _host.Write(prefix, ConsoleColor.DarkGray);
+        var eol = Environment.NewLine;
+        await printer(prefix, ConsoleColor.DarkGray);
         if (last)
         {
-            _host.Write("\\-", ConsoleColor.DarkGray);
+            await printer("\\-", ConsoleColor.DarkGray);
             prefix += "  ";
         }
         else
         {
-            _host.Write("|-", ConsoleColor.DarkGray);
+            await printer("|-", ConsoleColor.DarkGray);
             prefix += "| ";
         }
-        _host.WriteLine(node.ToString(), node.DebugColor);
+        var stringified = node.ToString() ?? "";
+
+        await printer(stringified + eol, node.DebugColor);
 
         var children = node.Children.ToList();
 
         for (int i = 0; i < children.Count; i++)
         {
-            Print(children[i], prefix, i == children.Count - 1);
+            await Print(children[i], printer, prefix, i == children.Count - 1);
         }
     }
 }

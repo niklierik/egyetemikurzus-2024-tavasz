@@ -1,10 +1,14 @@
 namespace Calculator.IO.Logging;
 
-public class LogManager(ICollection<ILogTarget> logTargets) : ILogManager
+public class LogManager(ILogTargetProvider logTargetProvider) : ILogManager
 {
-    private LogLevel _logLevel;
+#if DEBUG
+    private LogLevel _logLevel = LogLevel.All;
+#else
+    private LogLevel _logLevel = LogLevel.Info;
+#endif
 
-    private ICollection<ILogTarget> LogTargets { get; } = logTargets;
+    private ICollection<ILogTarget> LogTargets { get; } = logTargetProvider.GetLogTargets();
 
     public async Task Log(LogLevel logLevel, object? message, Exception? exception = null)
     {

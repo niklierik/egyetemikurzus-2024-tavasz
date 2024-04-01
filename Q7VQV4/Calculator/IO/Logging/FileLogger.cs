@@ -12,15 +12,16 @@ public class FileLogger : ILogTarget, IDisposable
 
     public async Task Log(LogLevel logLevel, object? message, Exception? exception = null)
     {
-        await _writer.WriteLineAsync($"[{logLevel}] - {message}");
+        await _writer.WriteLineAsync($"{DateTime.Now:o} [{logLevel}] - {message}");
         if (exception is not null)
         {
             await _writer.WriteLineAsync(exception.ToString());
         }
+        await _writer.FlushAsync();
     }
 
     public void Dispose()
     {
-        _writer.Dispose();
+        _writer.Close();
     }
 }

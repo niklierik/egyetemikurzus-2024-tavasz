@@ -4,5 +4,7 @@ namespace Calculator.IO;
 
 public interface INodePrettyPrinter
 {
-    void Print(ISyntaxNode node);
+    Task Print(ISyntaxNode node, Printer printer);
 }
+
+public delegate Task Printer(string text, ConsoleColor color);

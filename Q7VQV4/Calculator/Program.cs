@@ -1,53 +1,47 @@
-﻿using Calculator.IO;
+﻿using System.Reflection;
+using Calculator.Evaluators;
+using Calculator.Evaluators.ExpressionEvals;
+using Calculator.Interpreters;
+using Calculator.IO;
 using Calculator.IO.Logging;
-using Calculator.Syntax;
-using Calculator.Syntax.AST;
 using Calculator.Syntax.Lexing;
 using Calculator.Syntax.Parser;
-using Calculator.Syntax.Tokens;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using IHost = Calculator.IO.IHost;
 
-namespace Calculator;
+HostApplicationBuilder hostApplicationBuilder = Host.CreateApplicationBuilder(args);
+hostApplicationBuilder.Services.AddHostedService<InterpreterProgram>();
 
-public static class Program
+Assembly assembly = typeof(ISubEvaluator).Assembly;
+IReadOnlyList<Type> subEvaluatorTypes = TypeCollector.GetSubEvaluators(assembly);
+IReadOnlyList<Type> binaryOperators = TypeCollector.GetBinaryOps(assembly);
+IReadOnlyList<Type> unaryOperators = TypeCollector.GetUnaryOps(assembly);
+
+foreach (Type type in subEvaluatorTypes)
 {
-    public static void Main(string[] args)
-    {
-        ILexer lexer = new Lexer();
-        IHost host = new ConsoleHost();
-        IParser parser = new Parser();
-        INodePrettyPrinter nodePrettyPrinter = new NodePrettyPrinter(host);
-        while (true)
-        {
-            host.Write(" > ", ConsoleColor.White);
-            string? text = host.ReadLine();
-            if (text is null)
-            {
-                return;
-            }
-
-            if (string.IsNullOrWhiteSpace(text))
-            {
-                continue;
-            }
-
-            try
-            {
-                IReadOnlyList<ISyntaxToken> tokens = lexer.LexString(text, true);
-                RootNode expr = parser.Parse(tokens);
-
-                foreach (var token in tokens)
-                {
-                    host.Write(token, token.DebugColor);
-                }
-
-                host.WriteLine();
-
-                nodePrettyPrinter.Print(expr);
-            }
-            catch (SyntaxException exception)
-            {
-                host.WriteLine(exception, ConsoleColor.Red);
-            }
-        }
-    }
+    hostApplicationBuilder.Services.AddSingleton(type);
 }
+
+foreach (Type type in binaryOperators)
+{
+    hostApplicationBuilder.Services.AddSingleton(type);
+}
+
+foreach (Type type in unaryOperators)
+{
+    hostApplicationBuilder.Services.AddSingleton(type);
+}
+
+hostApplicationBuilder.Services.AddSingleton<ILexer, Lexer>();
+hostApplicationBuilder.Services.AddSingleton<IParser, Parser>();
+hostApplicationBuilder.Services.AddSingleton<IEvaluator, Evaluator>();
+hostApplicationBuilder.Services.AddSingleton<IHost, ConsoleHost>();
+hostApplicationBuilder.Services.AddSingleton<ILogManager, LogManager>();
+hostApplicationBuilder.Services.AddSingleton<ILogTargetProvider, LogTargetProvider>();
+hostApplicationBuilder.Services.AddSingleton<INodePrettyPrinter, NodePrettyPrinter>();
+hostApplicationBuilder.Services.AddSingleton<IInterpreter, Interpreter>();
+
+using var app = hostApplicationBuilder.Build();
+
+app.Start();
