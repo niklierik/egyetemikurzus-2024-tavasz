@@ -1,6 +1,6 @@
 namespace Calculator.Syntax.Tokens;
 
-public class DivideToken : IBinaryOperatorToken
+public record class DivideToken : IBinaryOperatorToken
 {
     public ConsoleColor DebugColor => ConsoleColor.Yellow;
 

@@ -21,6 +21,7 @@ public class Interpreter(
     private readonly ILexer _lexer = lexer;
     private readonly IParser _parser = parser;
     private readonly IEvaluator _evaluator = evaluator;
+    private readonly ILogManager _logger = logger;
     private readonly IHost _host = host;
     private bool printAstToConsole = false;
 
@@ -32,7 +33,7 @@ public class Interpreter(
             IEnumerable<string> tokensInString = tokens.Select(token =>
                 Environment.NewLine + (token.ToString() ?? "")
             );
-            await logger.Debug(string.Join("", tokensInString));
+            await _logger.Debug(string.Join("", tokensInString));
 
             RootNode ast = _parser.Parse(tokens);
             StringBuilder prettyAstBuilder = new StringBuilder(Environment.NewLine);
@@ -49,13 +50,29 @@ public class Interpreter(
                 }
             );
 
-            await logger.Debug(prettyAstBuilder.ToString());
+            await _logger.Debug(prettyAstBuilder.ToString());
 
             object? result = _evaluator.Evaluate(ast);
             return result;
         }
-        catch (SyntaxException e) { }
-        catch (EvaluatorException e) { }
+        catch (SyntaxException e)
+        {
+            _host.WriteLine("Syntax error:", ConsoleColor.Red);
+            _host.WriteLine(e.Message, ConsoleColor.Red);
+            await _logger.Error(e);
+        }
+        catch (EvaluatorException e)
+        {
+            _host.WriteLine("Evaluator error:", ConsoleColor.Red);
+            _host.WriteLine(e.Message, ConsoleColor.Red);
+            await _logger.Error(e);
+        }
+        catch (Exception e)
+        {
+            _host.WriteLine("Runtime error:");
+            _host.WriteLine(e, ConsoleColor.Red);
+            await _logger.Error(e);
+        }
         return null;
     }
 }

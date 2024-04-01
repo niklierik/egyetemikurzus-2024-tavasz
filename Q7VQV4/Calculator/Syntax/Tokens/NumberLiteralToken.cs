@@ -1,6 +1,6 @@
 namespace Calculator.Syntax.Tokens;
 
-public class NumberLiteralToken(double value, string rawValue) : ILiteralToken<double>
+public record class NumberLiteralToken(double value, string rawValue) : ILiteralToken<double>
 {
     public double Value { get; } = value;
 

@@ -2,7 +2,7 @@ using Calculator.Syntax;
 
 namespace Calculator.IO.Logging;
 
-public class CommaToken : ISyntaxToken
+public record class CommaToken : ISyntaxToken
 {
     public ConsoleColor DebugColor => ConsoleColor.DarkGray;
 

@@ -1,9 +1,7 @@
 namespace Calculator.Syntax.Tokens;
 
-public class IdentifierToken(string content) : ISyntaxToken, IOperandToken
+public record class IdentifierToken(string Content) : ISyntaxToken, IOperandToken
 {
-    public string Content { get; } = content;
-
     public ConsoleColor DebugColor => ConsoleColor.Green;
 
     public override string ToString() => $"IdentifierToken({Content})";

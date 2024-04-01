@@ -213,7 +213,9 @@ public class Parser : IParser
             || (rightOperand is LeafNode rightLeaf && rightLeaf.Token is not IOperandToken)
         )
         {
-            throw new SyntaxException("Unable to parse Binary Expression. Missing right.");
+            throw new SyntaxException(
+                "Unable to parse Binary Expression. Missing operand from the right side."
+            );
         }
 
         return new BinaryExpressionNode(leftOperand, @operator, rightOperand);

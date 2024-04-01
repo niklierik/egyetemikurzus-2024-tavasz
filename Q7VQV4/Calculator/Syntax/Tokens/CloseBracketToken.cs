@@ -1,6 +1,6 @@
 namespace Calculator.Syntax.Tokens;
 
-public class CloseBracketToken : ISyntaxToken
+public record class CloseBracketToken : ISyntaxToken
 {
     public ConsoleColor DebugColor => ConsoleColor.DarkRed;
 

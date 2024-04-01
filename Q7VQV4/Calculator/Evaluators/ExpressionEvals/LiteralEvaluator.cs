@@ -17,6 +17,6 @@ public class LiteralEvaluator : ISubEvaluator
             return literal.Value;
         }
 
-        throw new EvaluatorException($"Unprocessable leaf node: {arg.GetType()} with value.");
+        throw new EvaluatorException($"Unprocessable leaf node: '{leafNode.Token}'.");
     }
 }
