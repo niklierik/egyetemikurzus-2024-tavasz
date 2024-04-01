@@ -1,4 +1,5 @@
 using System.Collections.Immutable;
+using Calculator.IO.Logging;
 using Calculator.Syntax.AST;
 using Calculator.Syntax.Tokens;
 
@@ -14,17 +15,18 @@ public class Parser : IParser
     private bool _hasBinaryOperator = false;
     private bool _hasUnaryOperator = false;
 
-    private ISyntaxToken? Current
+    private ISyntaxToken? Current => TokenAt(_position);
+
+    private ISyntaxToken? TokenAt(int position)
     {
-        get
+        if (position >= _tokens.Count)
         {
-            if (_position >= _tokens.Count)
-            {
-                return null;
-            }
-            return _tokens[_position];
+            return null;
         }
+        return _tokens[position];
     }
+
+    private ISyntaxToken? TokenRelative(int offset) => TokenAt(_position + offset);
 
     public RootNode Parse(IReadOnlyList<ISyntaxToken> tokens)
     {
@@ -122,6 +124,7 @@ public class Parser : IParser
         syntaxNode ??= ParseBinaryExpression(priorityLevel);
         syntaxNode ??= ParseUnaryExpression(priorityLevel);
         syntaxNode ??= ParseGrouppedExpression();
+        syntaxNode ??= ParseMethodInvication();
         syntaxNode ??= ParseLeaf();
         return syntaxNode;
     }
@@ -257,5 +260,57 @@ public class Parser : IParser
         }
 
         return new GrouppedExpressionNode(openLeaf, expression, closeLeaf);
+    }
+
+    private ISyntaxNode? ParseMethodInvication()
+    {
+        if (Current is not IdentifierToken || TokenRelative(1) is not OpenBracketToken)
+        {
+            return null;
+        }
+
+        var methodName = ParseLeaf();
+        if (methodName is null)
+        {
+            return null;
+        }
+        var openBracket = ParseLeaf();
+        if (openBracket is null)
+        {
+            return null;
+        }
+        if (Current is CloseBracketToken)
+        {
+            var closeBracket = ParseLeaf();
+            if (closeBracket is null)
+            {
+                return null;
+            }
+            return new MethodInvocationNode(methodName, openBracket, [], closeBracket);
+        }
+        List<ISyntaxNode> args = [];
+        while (true)
+        {
+            var node = ParseNext(_minOperatorPriority);
+            if (node is null)
+            {
+                break;
+            }
+            args.Add(node);
+
+            if (Current is not CommaToken)
+            {
+                break;
+            }
+
+            ParseLeaf();
+        }
+
+        var close = ParseLeaf();
+        if (close is null || close.Token is not CloseBracketToken)
+        {
+            throw new SyntaxException("Missing Close Bracket for method invocation.");
+        }
+        return new MethodInvocationNode(methodName, openBracket, args, close);
     }
 }

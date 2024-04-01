@@ -1,7 +1,16 @@
+using System.Globalization;
+using System.Text;
+
 namespace Calculator.IO.Logging;
 
 public class ConsoleHost : IHost, ILogTarget
 {
+    public ConsoleHost()
+    {
+        Console.OutputEncoding = Console.InputEncoding = Encoding.UTF8;
+        CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
+    }
+
     public void Write(object? message)
     {
         Console.Write(message);

@@ -4,7 +4,7 @@ public class InterpreterState
 {
     public bool PrintAstToConsole { get; set; } = false;
 
-    public Dictionary<string, object?> Variables { get; set; } = new();
+    public Dictionary<string, object?> Variables { get; set; } = [];
     public Dictionary<string, object?> Consts { get; set; } =
         new()
         {
@@ -14,6 +14,21 @@ public class InterpreterState
             { "e", Math.E },
             { "null", null }
         };
+
+    public Dictionary<string, IMethod> Methods { get; set; } = [];
+
+    public InterpreterState()
+    {
+        Methods.Add(
+            "sin",
+            new NativeStaticMethodWrapper()
+            {
+                Alias = "sin",
+                CSharpClass = $"{nameof(System)}.{nameof(Math)}",
+                MethodName = "Sin"
+            }
+        );
+    }
 
     public object? GetVariable(string name)
     {

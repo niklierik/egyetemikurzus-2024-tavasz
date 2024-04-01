@@ -58,7 +58,7 @@ public class Lexer : ILexer
 
         string identifier = "";
 
-        while (char.IsAsciiLetterOrDigit(CurrentChar) || CurrentChar == '_')
+        while (char.IsAsciiLetterOrDigit(CurrentChar) || CurrentChar == '_' || CurrentChar == '.')
         {
             identifier += CurrentChar;
             _currentPosition++;
