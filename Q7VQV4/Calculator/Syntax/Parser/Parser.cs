@@ -14,6 +14,18 @@ public class Parser : IParser
     private bool _hasBinaryOperator = false;
     private bool _hasUnaryOperator = false;
 
+    private ISyntaxToken? Current
+    {
+        get
+        {
+            if (_position >= _tokens.Count)
+            {
+                return null;
+            }
+            return _tokens[_position];
+        }
+    }
+
     public RootNode Parse(IReadOnlyList<ISyntaxToken> tokens)
     {
         try
@@ -109,6 +121,7 @@ public class Parser : IParser
 
         syntaxNode ??= ParseBinaryExpression(priorityLevel);
         syntaxNode ??= ParseUnaryExpression(priorityLevel);
+        syntaxNode ??= ParseGrouppedExpression();
         syntaxNode ??= ParseLeaf();
         return syntaxNode;
     }
@@ -134,20 +147,19 @@ public class Parser : IParser
         {
             return null;
         }
-        LeafNode? @operator = ParseLeaf();
-        if (@operator is null)
+
+        if (Current is not IUnaryOperatorToken operandToken)
         {
-            return null;
-        }
-        ISyntaxToken token = @operator.Token;
-        if (token is not IUnaryOperatorToken operandToken)
-        {
-            _position--;
             return null;
         }
         if (operandToken.UnaryPriority < priorityLevel)
         {
-            _position--;
+            return null;
+        }
+
+        LeafNode? @operator = ParseLeaf();
+        if (@operator is null)
+        {
             return null;
         }
 
@@ -190,19 +202,18 @@ public class Parser : IParser
             return null;
         }
 
-        LeafNode? @operator = ParseLeaf();
-
-        if (@operator is null)
+        if (
+            Current is not IBinaryOperatorToken operandToken
+            || operandToken.BinaryPriority < priorityLevel
+        )
         {
             return leftOperand;
         }
 
-        if (
-            @operator.Token is not IBinaryOperatorToken operandToken
-            || operandToken.BinaryPriority < priorityLevel
-        )
+        LeafNode? @operator = ParseLeaf();
+
+        if (@operator is null)
         {
-            _position--;
             return leftOperand;
         }
 
@@ -219,5 +230,32 @@ public class Parser : IParser
         }
 
         return new BinaryExpressionNode(leftOperand, @operator, rightOperand);
+    }
+
+    private ISyntaxNode? ParseGrouppedExpression()
+    {
+        if (Current is not OpenBracketToken open)
+        {
+            return null;
+        }
+        var openLeaf = ParseLeaf();
+        if (openLeaf is null)
+        {
+            return null;
+        }
+        var expression = ParseNext(_minOperatorPriority);
+
+        if (expression is null)
+        {
+            throw new SyntaxException("Missing expression from group.");
+        }
+
+        var closeLeaf = ParseLeaf();
+        if (closeLeaf is null || closeLeaf.Token is not CloseBracketToken)
+        {
+            throw new SyntaxException("Missing close bracket in group expression.");
+        }
+
+        return new GrouppedExpressionNode(openLeaf, expression, closeLeaf);
     }
 }

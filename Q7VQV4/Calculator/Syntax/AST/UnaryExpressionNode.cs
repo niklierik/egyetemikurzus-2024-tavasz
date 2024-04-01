@@ -1,11 +1,8 @@
 namespace Calculator.Syntax.AST;
 
-public class UnaryExpressionNode(LeafNode @operator, ISyntaxNode operand) : IExpressionNode
+public record class UnaryExpressionNode(LeafNode Operator, ISyntaxNode Operand) : IExpressionNode
 {
-    public LeafNode Operator { get; } = @operator;
-    public ISyntaxNode Operand { get; } = operand;
-
-    public ICollection<ISyntaxNode> Children { get; } = [@operator, operand];
+    public ICollection<ISyntaxNode> Children { get; } = [Operator, Operand];
 
     public ConsoleColor DebugColor => ConsoleColor.Cyan;
 

@@ -1,9 +1,7 @@
 namespace Calculator.Syntax.AST;
 
-public class LeafNode(ISyntaxToken literalToken) : ISyntaxNode
+public record class LeafNode(ISyntaxToken Token) : ISyntaxNode
 {
-    public ISyntaxToken Token { get; } = literalToken;
-
     public ICollection<ISyntaxNode> Children => Enumerable.Empty<ISyntaxNode>().ToList();
 
     public ConsoleColor DebugColor => Token.DebugColor;

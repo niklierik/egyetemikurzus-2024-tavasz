@@ -1,8 +1,8 @@
 namespace Calculator.Syntax.AST;
 
-public class RootNode(ICollection<ISyntaxNode> expressions) : ISyntaxNode
+public record class RootNode(ICollection<ISyntaxNode> Expressions) : ISyntaxNode
 {
-    public ICollection<ISyntaxNode> Children { get; } = expressions;
+    public ICollection<ISyntaxNode> Children { get; } = Expressions;
 
     public ConsoleColor DebugColor => ConsoleColor.DarkRed;
 

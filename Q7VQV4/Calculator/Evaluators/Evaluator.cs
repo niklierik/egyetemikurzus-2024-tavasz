@@ -39,7 +39,7 @@ public class Evaluator : IEvaluator
 
     public ISubEvaluator GetEvaluatorFor(ISyntaxNode node)
     {
-        Type? subEvalType = _subEvaluatorTypes.First(type =>
+        Type? subEvalType = _subEvaluatorTypes.FirstOrDefault(type =>
         {
             EvaluatorForAttribute? attribute = type.GetCustomAttribute<EvaluatorForAttribute>();
             if (attribute is null)
@@ -51,7 +51,7 @@ public class Evaluator : IEvaluator
 
         if (subEvalType is null)
         {
-            throw new InvalidOperationException($"Missing SubEvaluator for type {node.GetType()}.");
+            throw new EvaluatorException($"Missing SubEvaluator for type {node.GetType()}.");
         }
 
         // TODO: di
