@@ -1,9 +1,9 @@
-using System.Collections.Immutable;
 using System.Reflection;
 using Calculator.Evaluators.ExpressionEvals;
 using Calculator.Evaluators.ExpressionEvals.BinaryOps;
 using Calculator.Evaluators.ExpressionEvals.UnaryOps;
 using Calculator.Syntax.AST;
+using Calculator.Utils;
 
 namespace Calculator.Evaluators;
 
@@ -14,15 +14,15 @@ public class Evaluator : IEvaluator
     private readonly IReadOnlyCollection<Type> _unaryOperators;
     private readonly IServiceProvider _serviceProvider;
 
-    public Evaluator(IServiceProvider serviceProvider)
+    public Evaluator(IServiceProvider serviceProvider, ITypeCollector typeCollector)
     {
         _serviceProvider = serviceProvider;
 
         Assembly assembly = GetType().Assembly;
 
-        _subEvaluatorTypes = TypeCollector.GetSubEvaluators(assembly);
-        _binaryOperators = TypeCollector.GetBinaryOps(assembly);
-        _unaryOperators = TypeCollector.GetUnaryOps(assembly);
+        _subEvaluatorTypes = typeCollector.GetSubEvaluators(assembly);
+        _binaryOperators = typeCollector.GetBinaryOps(assembly);
+        _unaryOperators = typeCollector.GetUnaryOps(assembly);
     }
 
     public object? Evaluate(RootNode root)

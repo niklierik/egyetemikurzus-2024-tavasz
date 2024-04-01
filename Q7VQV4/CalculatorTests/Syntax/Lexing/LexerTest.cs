@@ -1,5 +1,8 @@
+using System.Reflection;
 using Calculator.Syntax.Lexing;
 using Calculator.Syntax.Tokens;
+using Calculator.Utils;
+using Moq;
 
 namespace CalculatorTests.Syntax.Lexing;
 
@@ -10,7 +13,20 @@ public class LexerTest
     [SetUp]
     public void SetUp()
     {
-        _lexer = new Lexer();
+        var typeCollectorMock = new Mock<ITypeCollector>();
+        typeCollectorMock
+            .Setup(typeCollector => typeCollector.GetConstantStringTokens(It.IsAny<Assembly>()))
+            .Returns(
+                [
+                    typeof(AddToken),
+                    typeof(SubtractToken),
+                    typeof(MultiplyToken),
+                    typeof(DivideToken),
+                    typeof(OpenBracketToken),
+                    typeof(CloseBracketToken)
+                ]
+            );
+        _lexer = new Lexer(typeCollectorMock.Object);
     }
 
     [Category("LexString()")]

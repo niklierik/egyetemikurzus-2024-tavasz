@@ -1,4 +1,5 @@
 using System.Reflection;
+using Calculator;
 using Calculator.Evaluators;
 using Calculator.Interpreters;
 using Calculator.IO;
@@ -6,6 +7,7 @@ using Calculator.IO.Logging;
 using Calculator.State;
 using Calculator.Syntax.Lexing;
 using Calculator.Syntax.Parser;
+using Calculator.Utils;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 
@@ -27,9 +29,12 @@ public class InterpreterIntegrationTests
     {
         var serviceCollection = new ServiceCollection();
         Assembly assembly = typeof(InterpreterProgram).Assembly;
-        IReadOnlyList<Type> subEvaluatorTypes = TypeCollector.GetSubEvaluators(assembly);
-        IReadOnlyList<Type> binaryOperators = TypeCollector.GetBinaryOps(assembly);
-        IReadOnlyList<Type> unaryOperators = TypeCollector.GetUnaryOps(assembly);
+
+        var typeCollector = new TypeCollector();
+
+        IReadOnlyList<Type> subEvaluatorTypes = typeCollector.GetSubEvaluators(assembly);
+        IReadOnlyList<Type> binaryOperators = typeCollector.GetBinaryOps(assembly);
+        IReadOnlyList<Type> unaryOperators = typeCollector.GetUnaryOps(assembly);
 
         foreach (Type type in subEvaluatorTypes)
         {
@@ -50,6 +55,8 @@ public class InterpreterIntegrationTests
         serviceCollection.AddSingleton<IParser, Parser>();
         serviceCollection.AddSingleton<IEvaluator, Evaluator>();
         serviceCollection.AddSingleton<IInterpreter<InterpreterState>, Interpreter>();
+
+        serviceCollection.AddSingleton<ITypeCollector, TypeCollector>();
 
         var nodePrettyPrinterMock = new Mock<INodePrettyPrinter>();
         serviceCollection.AddSingleton<INodePrettyPrinter>(nodePrettyPrinterMock.Object);

@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Calculator;
 using Calculator.Evaluators;
 using Calculator.Evaluators.ExpressionEvals;
 using Calculator.Interpreters;
@@ -7,6 +8,7 @@ using Calculator.IO.Logging;
 using Calculator.State;
 using Calculator.Syntax.Lexing;
 using Calculator.Syntax.Parser;
+using Calculator.Utils;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using IHost = Calculator.IO.IHost;
@@ -14,10 +16,12 @@ using IHost = Calculator.IO.IHost;
 HostApplicationBuilder hostApplicationBuilder = Host.CreateApplicationBuilder(args);
 hostApplicationBuilder.Services.AddHostedService<InterpreterProgram>();
 
+var typeCollector = new TypeCollector();
+
 Assembly assembly = typeof(ISubEvaluator).Assembly;
-IReadOnlyList<Type> subEvaluatorTypes = TypeCollector.GetSubEvaluators(assembly);
-IReadOnlyList<Type> binaryOperators = TypeCollector.GetBinaryOps(assembly);
-IReadOnlyList<Type> unaryOperators = TypeCollector.GetUnaryOps(assembly);
+IReadOnlyList<Type> subEvaluatorTypes = typeCollector.GetSubEvaluators(assembly);
+IReadOnlyList<Type> binaryOperators = typeCollector.GetBinaryOps(assembly);
+IReadOnlyList<Type> unaryOperators = typeCollector.GetUnaryOps(assembly);
 
 foreach (Type type in subEvaluatorTypes)
 {
@@ -44,6 +48,7 @@ hostApplicationBuilder.Services.AddSingleton<INodePrettyPrinter, NodePrettyPrint
 hostApplicationBuilder.Services.AddSingleton<IInterpreter<InterpreterState>, Interpreter>();
 hostApplicationBuilder.Services.AddSingleton<IJsonService, JsonService>();
 hostApplicationBuilder.Services.AddSingleton<IStateLoader<InterpreterState>, StateLoader>();
+hostApplicationBuilder.Services.AddSingleton<ITypeCollector>(typeCollector);
 
 using var app = hostApplicationBuilder.Build();
 

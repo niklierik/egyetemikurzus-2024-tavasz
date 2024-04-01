@@ -3,12 +3,27 @@ using System.Reflection;
 using Calculator.Evaluators.ExpressionEvals;
 using Calculator.Evaluators.ExpressionEvals.BinaryOps;
 using Calculator.Evaluators.ExpressionEvals.UnaryOps;
+using Calculator.Syntax;
+using Calculator.Syntax.Tokens;
 
-namespace Calculator.Evaluators;
+namespace Calculator.Utils;
 
-public static class TypeCollector
+public class TypeCollector : ITypeCollector
 {
-    public static IReadOnlyList<Type> GetSubEvaluators(Assembly assembly)
+    public IReadOnlyList<Type> GetConstantStringTokens(Assembly assembly)
+    {
+        return assembly
+            .GetTypes()
+            .Where(type =>
+                typeof(ISyntaxToken).IsAssignableFrom(type)
+                && !type.IsInterface
+                && !type.IsAbstract
+                && type.GetCustomAttribute<ConstantStringTokenAttribute>() is not null
+            )
+            .ToImmutableList();
+    }
+
+    public IReadOnlyList<Type> GetSubEvaluators(Assembly assembly)
     {
         return assembly
             .GetTypes()
@@ -21,7 +36,7 @@ public static class TypeCollector
             .ToImmutableList();
     }
 
-    public static IReadOnlyList<Type> GetBinaryOps(Assembly assembly)
+    public IReadOnlyList<Type> GetBinaryOps(Assembly assembly)
     {
         return assembly
             .GetTypes()
@@ -34,7 +49,7 @@ public static class TypeCollector
             .ToImmutableList();
     }
 
-    public static IReadOnlyList<Type> GetUnaryOps(Assembly assembly)
+    public IReadOnlyList<Type> GetUnaryOps(Assembly assembly)
     {
         return assembly
             .GetTypes()

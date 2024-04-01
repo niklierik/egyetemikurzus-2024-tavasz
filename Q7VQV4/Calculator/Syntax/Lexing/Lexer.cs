@@ -1,14 +1,39 @@
+using System.Collections.Immutable;
 using System.Globalization;
+using System.Reflection;
 using Calculator.Source;
 using Calculator.Syntax.Tokens;
+using Calculator.Utils;
 
 namespace Calculator.Syntax.Lexing;
 
 // TODO: remove state
 public class Lexer : ILexer
 {
+    private readonly IReadOnlyList<(Type type, string toMatch)> _constantStringTokens;
     private int _currentPosition = 0;
     private string _text = "";
+    private char CurrentChar => CharacterAt(_currentPosition);
+
+    public Lexer(ITypeCollector typeCollector)
+    {
+        _constantStringTokens = typeCollector
+            .GetConstantStringTokens(GetType().Assembly)
+            .Select(type =>
+            {
+                var attribute = type.GetCustomAttribute<ConstantStringTokenAttribute>();
+                if (attribute is null)
+                {
+                    // this should never trigger
+                    throw new InvalidOperationException(
+                        $"Unable to load lexer as the token marked constant string misses the attribute: {type}"
+                    );
+                }
+                return (type: type, toMatch: attribute.MatchTo);
+            })
+            .OrderByDescending(tuple => tuple.toMatch.Length)
+            .ToImmutableList();
+    }
 
     private char CharacterAt(int position)
     {
@@ -23,8 +48,6 @@ public class Lexer : ILexer
 
         return _text[position];
     }
-
-    private char CurrentChar => CharacterAt(_currentPosition);
 
     private IdentifierToken? LexIdentifier()
     {
@@ -85,34 +108,24 @@ public class Lexer : ILexer
         return new NumberLiteralToken(value, rawValue);
     }
 
-    private ISyntaxToken? LexOperator()
+    private ISyntaxToken? LexConstantStringToken()
     {
-        switch (CurrentChar)
+        foreach (var (type, matchTo) in _constantStringTokens)
         {
-            case '+':
-                _currentPosition++;
-                return new AddToken();
-            case '-':
-                _currentPosition++;
-                return new SubtractToken();
-            case '*':
-                _currentPosition++;
-                return new MultiplyToken();
-            case '/':
-                _currentPosition++;
-                return new DivideToken();
-            case '^':
-                _currentPosition++;
-                return new PowToken();
-            case '(':
-                _currentPosition++;
-                return new OpenBracketToken();
-            case ')':
-                _currentPosition++;
-                return new CloseBracketToken();
-            default:
-                return null;
+            if (matchTo == _text.Substring(_currentPosition, matchTo.Length))
+            {
+                var tokenInstance = Activator.CreateInstance(type);
+                if (tokenInstance is not ISyntaxToken token)
+                {
+                    throw new InvalidOperationException(
+                        $"Created instance from {type} but it cannot be casted into ISyntaxToken."
+                    );
+                }
+                _currentPosition += matchTo.Length;
+                return token;
+            }
         }
+        return null;
     }
 
     private ISyntaxToken LexBadToken()
@@ -131,7 +144,7 @@ public class Lexer : ILexer
 
         ISyntaxToken? token = null;
 
-        token ??= LexOperator();
+        token ??= LexConstantStringToken();
         token ??= LexWhitespace();
         token ??= LexIdentifier();
         token ??= LexNumber();
