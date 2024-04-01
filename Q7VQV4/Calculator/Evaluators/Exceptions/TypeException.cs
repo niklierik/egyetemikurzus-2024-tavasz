@@ -1,6 +1,4 @@
-using System.Runtime.Serialization;
-
-namespace Calculator.Evaluators.ExpressionEvals;
+namespace Calculator.Evaluators.Exceptions;
 
 public class TypeException : RuntimeException
 {

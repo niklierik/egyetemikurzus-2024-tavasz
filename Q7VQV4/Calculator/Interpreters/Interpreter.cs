@@ -1,5 +1,6 @@
 using System.Text;
 using Calculator.Evaluators;
+using Calculator.Evaluators.Exceptions;
 using Calculator.IO;
 using Calculator.IO.Logging;
 using Calculator.State;
@@ -81,28 +82,28 @@ public class Interpreter(
             _host.WriteLine("Syntax error:", ConsoleColor.Red);
             _host.WriteLine(e.Message, ConsoleColor.Red);
             await _logger.Error(e);
-            throw;
+            return e;
         }
         catch (EvaluatorException e)
         {
-            _host.WriteLine("Evaluator error:", ConsoleColor.Red);
+            _host.WriteLine("Evaluator error (invalid setup):", ConsoleColor.Red);
             _host.WriteLine(e.Message, ConsoleColor.Red);
             await _logger.Error(e);
-            throw;
+            return e;
         }
         catch (RuntimeException e)
         {
             _host.WriteLine("Runtime error:", ConsoleColor.Red);
             _host.WriteLine(e.Message, ConsoleColor.Red);
             await _logger.Error(e);
-            throw;
+            return e;
         }
         catch (Exception e)
         {
             _host.WriteLine("Unhandled error:");
             _host.WriteLine(e, ConsoleColor.Red);
             await _logger.Error(e);
-            throw;
+            return e;
         }
     }
 }

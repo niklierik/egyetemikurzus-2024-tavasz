@@ -31,20 +31,15 @@ public class InterpreterProgram(
                 continue;
             }
 
-            try
+            object? result = await _interpreter.Execute(text);
+            if (result is null)
             {
-                object? result = await _interpreter.Execute(text);
-                if (result is null)
-                {
-                    _host.WriteLine("null", ConsoleColor.White);
-                    continue;
-                }
-
-                _host.WriteLine(result, ConsoleColor.Green);
+                _host.WriteLine("null", ConsoleColor.White);
+                continue;
             }
-            catch
+            if (result is not Exception)
             {
-                // Silencing exceptions, because it is the Interpreters job to log exceptions according their types
+                _host.WriteLine(result, ConsoleColor.Green);
             }
         }
     }

@@ -113,6 +113,7 @@ public class InterpreterIntegrationTests
         new() { Expression = "someVariable + 3", Expected = 6.0 },
         new() { Expression = "anotherVariable", Expected = "asd" },
         new() { Expression = "missingVariable", Expected = null },
+        new() { Expression = "a = 3", Expected = 3.0 },
     ];
 
     [Theory]

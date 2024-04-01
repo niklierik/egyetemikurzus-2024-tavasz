@@ -1,3 +1,4 @@
+using System.Reflection;
 using Calculator.Evaluators.ExpressionEvals.BinaryOps;
 using Calculator.Syntax;
 using Calculator.Syntax.AST;
@@ -22,9 +23,6 @@ public class BinaryExpressionEvaluator(IEvaluator evaluator) : ISubEvaluator
         ISubEvaluator leftEvaluator = _evaluator.GetEvaluatorFor(leftArg);
         ISubEvaluator rightEvaluator = _evaluator.GetEvaluatorFor(rightArg);
 
-        object? leftValue = leftEvaluator.Evaluate(leftArg);
-        object? rightValue = rightEvaluator.Evaluate(rightArg);
-
         ISyntaxToken operatorSymbol = binaryExpression.Operator.Token;
         if (operatorSymbol is not IBinaryOperatorToken token)
         {
@@ -34,6 +32,26 @@ public class BinaryExpressionEvaluator(IEvaluator evaluator) : ISubEvaluator
         }
 
         IBinaryOperator op = _evaluator.GetBinaryOperator(token);
+        BinaryOpAttribute? binaryOpAttribute = op.GetType().GetCustomAttribute<BinaryOpAttribute>();
+
+        if (binaryOpAttribute is null)
+        {
+            throw new EvaluatorException(
+                $"BinaryOperator {op.GetType()} has missing BinaryOp attribute."
+            );
+        }
+
+        object? leftValue = leftArg;
+        if (!binaryOpAttribute.KeepLeftTree)
+        {
+            leftValue = leftEvaluator.Evaluate(leftArg);
+        }
+
+        object? rightValue = rightArg;
+        if (!binaryOpAttribute.KeepRightTree)
+        {
+            rightValue = rightEvaluator.Evaluate(rightArg);
+        }
 
         object? result = op.Evaluate(leftValue, rightValue);
 
