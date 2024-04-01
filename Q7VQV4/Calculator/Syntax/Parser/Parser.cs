@@ -121,6 +121,7 @@ public class Parser : IParser
 
         ISyntaxNode? syntaxNode = null;
 
+        syntaxNode ??= ParseImportStatement();
         syntaxNode ??= ParseBinaryExpression(priorityLevel);
         syntaxNode ??= ParsePrefixedUnaryExpression(priorityLevel);
         syntaxNode ??= ParseGrouppedExpression();
@@ -139,6 +140,66 @@ public class Parser : IParser
         var token = _tokens[_position];
         _position++;
         return new LeafNode(token);
+    }
+
+    private ISyntaxNode? ParseImportStatement()
+    {
+        if (Current is not ImportToken)
+        {
+            return null;
+        }
+        var import = ParseLeaf();
+
+        if (import is null)
+        {
+            throw new SyntaxException(
+                "Tried to parse an import statement, but could not parse the 'import' keyword."
+            );
+        }
+
+        var args = new List<LeafNode>();
+
+        while (Current is not FromToken)
+        {
+            if (!(Current is MultiplyToken or IdentifierToken))
+            {
+                throw new SyntaxException(
+                    "Import statement must be followed with any number and combination of Identifier, a '*' and the last symbol must be a 'from' keyword."
+                );
+            }
+            var leaf = ParseLeaf();
+            if (leaf is null)
+            {
+                throw new SyntaxException(
+                    $"Failed to parse topken {Current} as leaf node for import statement."
+                );
+            }
+            args.Add(leaf);
+        }
+
+        var from = ParseLeaf();
+        if (from is null)
+        {
+            throw new SyntaxException(
+                "Tried to parse an import statement, but could not parse the 'from' keyword."
+            );
+        }
+        if (Current is not IdentifierToken)
+        {
+            throw new SyntaxException(
+                "'import ... from' must be followed with an identifier containing a C# class."
+            );
+        }
+        var csharpClass = ParseLeaf();
+
+        if (csharpClass is null)
+        {
+            throw new SyntaxException(
+                "'import ... from' must be followed with an identifier containing a C# class."
+            );
+        }
+
+        return new ImportExpressionNode(import, args, from, csharpClass);
     }
 
     private ISyntaxNode? ParsePrefixedUnaryExpression(int priorityLevel)

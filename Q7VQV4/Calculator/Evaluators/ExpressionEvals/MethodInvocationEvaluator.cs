@@ -1,4 +1,5 @@
 using System.Collections.Immutable;
+using Calculator.Evaluators.Exceptions;
 using Calculator.Interpreters;
 using Calculator.State;
 using Calculator.Syntax.AST;
@@ -33,7 +34,7 @@ public class MethodInvocationEvaluator(
 
         if (method is null)
         {
-            throw new MissingMethodException($"Method '{name}' does not exist.");
+            throw new MissingNativeObjectException($"Method '{name}' does not exist.");
         }
 
         object?[] args = methodInvocationNode

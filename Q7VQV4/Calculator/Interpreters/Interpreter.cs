@@ -34,6 +34,14 @@ public class Interpreter(
     {
         _state = await _stateProvider.LoadState("interp.json");
         InterpreterState.AddNeccessaryInfo(_state);
+        foreach (var pathFolder in _state.Paths)
+        {
+            var initFile = Path.Join(pathFolder, "init.script");
+            if (File.Exists(initFile))
+            {
+                await ExecuteFile(initFile);
+            }
+        }
     }
 
     public InterpreterState State
@@ -46,6 +54,17 @@ public class Interpreter(
             }
             return _state;
         }
+    }
+
+    public async Task<object?> ExecuteFile(string path)
+    {
+        var lines = File.ReadAllLines(path);
+        object? result = null;
+        foreach (var line in lines)
+        {
+            result = await Execute(line);
+        }
+        return result;
     }
 
     public async Task<object?> Execute(string line)
@@ -76,6 +95,7 @@ public class Interpreter(
             await _logger.Debug(prettyAstBuilder.ToString());
 
             object? result = _evaluator.Evaluate(ast);
+            State.Variables["ANS"] = result;
             return result;
         }
         catch (SyntaxException e)

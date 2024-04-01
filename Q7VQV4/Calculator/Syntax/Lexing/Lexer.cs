@@ -49,7 +49,7 @@ public class Lexer : ILexer
         return _text[position];
     }
 
-    private IdentifierToken? LexIdentifier()
+    private ISyntaxToken? LexIdentifier()
     {
         if (!(char.IsAsciiLetter(CurrentChar) || CurrentChar == '_'))
         {
@@ -62,6 +62,19 @@ public class Lexer : ILexer
         {
             identifier += CurrentChar;
             _currentPosition++;
+        }
+
+        var (type, _) = _constantStringTokens.FirstOrDefault(
+            (tuple) => tuple.toMatch == identifier,
+            (null!, "")
+        );
+        if (type is not null)
+        {
+            var instance = Activator.CreateInstance(type);
+            if (instance is ISyntaxToken token)
+            {
+                return token;
+            }
         }
 
         return new IdentifierToken(identifier);
@@ -148,10 +161,10 @@ public class Lexer : ILexer
 
         ISyntaxToken? token = null;
 
-        token ??= LexConstantStringToken();
         token ??= LexWhitespace();
         token ??= LexIdentifier();
         token ??= LexNumber();
+        token ??= LexConstantStringToken();
         token ??= LexBadToken();
 
         return token;
