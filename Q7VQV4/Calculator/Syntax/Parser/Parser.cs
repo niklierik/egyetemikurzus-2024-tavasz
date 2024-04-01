@@ -122,10 +122,11 @@ public class Parser : IParser
         ISyntaxNode? syntaxNode = null;
 
         syntaxNode ??= ParseBinaryExpression(priorityLevel);
-        syntaxNode ??= ParseUnaryExpression(priorityLevel);
+        syntaxNode ??= ParsePrefixedUnaryExpression(priorityLevel);
         syntaxNode ??= ParseGrouppedExpression();
         syntaxNode ??= ParseMethodInvication();
         syntaxNode ??= ParseLeaf();
+        syntaxNode = ParsePostfixUnaryExpression(syntaxNode);
         return syntaxNode;
     }
 
@@ -140,7 +141,7 @@ public class Parser : IParser
         return new LeafNode(token);
     }
 
-    private ISyntaxNode? ParseUnaryExpression(int priorityLevel)
+    private ISyntaxNode? ParsePrefixedUnaryExpression(int priorityLevel)
     {
         if (!_hasUnaryOperator)
         {
@@ -181,6 +182,24 @@ public class Parser : IParser
         }
 
         return new UnaryExpressionNode(@operator, operand);
+    }
+
+    private ISyntaxNode? ParsePostfixUnaryExpression(ISyntaxNode? node)
+    {
+        if (node is null)
+        {
+            return null;
+        }
+        if (Current is not IUnaryOperatorToken operatorToken || !operatorToken.PostOperator)
+        {
+            return node;
+        }
+        var @operator = ParseLeaf();
+        if (@operator is null)
+        {
+            return node;
+        }
+        return new UnaryExpressionNode(@operator, node);
     }
 
     private ISyntaxNode? ParseBinaryExpression(int priorityLevel)

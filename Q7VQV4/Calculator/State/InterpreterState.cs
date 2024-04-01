@@ -17,18 +17,9 @@ public class InterpreterState
 
     public Dictionary<string, IMethod> Methods { get; set; } = [];
 
-    public InterpreterState()
-    {
-        Methods.Add(
-            "sin",
-            new NativeStaticMethodWrapper()
-            {
-                Alias = "sin",
-                CSharpClass = $"{nameof(System)}.{nameof(Math)}",
-                MethodName = "Sin"
-            }
-        );
-    }
+    public List<string> Paths { get; } = ["scripts"];
+
+    public InterpreterState() { }
 
     public object? GetVariable(string name)
     {
@@ -39,4 +30,6 @@ public class InterpreterState
         }
         return Variables.GetValueOrDefault(name);
     }
+
+    public static void AddNeccessaryInfo(InterpreterState state) { }
 }

@@ -112,6 +112,10 @@ public class Lexer : ILexer
     {
         foreach (var (type, matchTo) in _constantStringTokens)
         {
+            if (_currentPosition + matchTo.Length > _text.Length)
+            {
+                continue;
+            }
             if (matchTo == _text.Substring(_currentPosition, matchTo.Length))
             {
                 var tokenInstance = Activator.CreateInstance(type);

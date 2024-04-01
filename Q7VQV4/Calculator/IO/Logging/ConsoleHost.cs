@@ -7,7 +7,7 @@ public class ConsoleHost : IHost, ILogTarget
 {
     public ConsoleHost()
     {
-        Console.OutputEncoding = Console.InputEncoding = Encoding.UTF8;
+        Console.OutputEncoding = Encoding.UTF8;
         CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
     }
 

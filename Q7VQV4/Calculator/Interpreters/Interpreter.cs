@@ -33,6 +33,7 @@ public class Interpreter(
     public async Task Init()
     {
         _state = await _stateProvider.LoadState("interp.json");
+        InterpreterState.AddNeccessaryInfo(_state);
     }
 
     public InterpreterState State

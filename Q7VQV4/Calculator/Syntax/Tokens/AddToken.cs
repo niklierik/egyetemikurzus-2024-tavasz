@@ -9,4 +9,6 @@ public record class AddToken : IBinaryOperatorToken, IUnaryOperatorToken
     public int UnaryPriority => 10;
 
     public override string ToString() => "+";
+
+    public bool PostOperator => false;
 }
