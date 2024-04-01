@@ -81,19 +81,28 @@ public class Interpreter(
             _host.WriteLine("Syntax error:", ConsoleColor.Red);
             _host.WriteLine(e.Message, ConsoleColor.Red);
             await _logger.Error(e);
+            throw;
         }
         catch (EvaluatorException e)
         {
             _host.WriteLine("Evaluator error:", ConsoleColor.Red);
             _host.WriteLine(e.Message, ConsoleColor.Red);
             await _logger.Error(e);
+            throw;
+        }
+        catch (RuntimeException e)
+        {
+            _host.WriteLine("Runtime error:", ConsoleColor.Red);
+            _host.WriteLine(e.Message, ConsoleColor.Red);
+            await _logger.Error(e);
+            throw;
         }
         catch (Exception e)
         {
-            _host.WriteLine("Runtime error:");
+            _host.WriteLine("Unhandled error:");
             _host.WriteLine(e, ConsoleColor.Red);
             await _logger.Error(e);
+            throw;
         }
-        return null;
     }
 }

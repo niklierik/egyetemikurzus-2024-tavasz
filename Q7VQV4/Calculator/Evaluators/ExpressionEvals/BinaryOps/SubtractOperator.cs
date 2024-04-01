@@ -9,7 +9,9 @@ public class SubtractOperator : IBinaryOperator
     {
         if (leftValue is not double left || rightValue is not double right)
         {
-            throw new TypeException("Subtract operator requires both operands to be numbers.");
+            throw new TypeException(
+                $"Subtract operator requires both operands to be numbers. (Tried: {leftValue ?? "null"} - {rightValue ?? "null"})"
+            );
         }
 
         return left - right;

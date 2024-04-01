@@ -9,7 +9,9 @@ public class NegateOperator : IUnaryOperator
     {
         if (value is not double number)
         {
-            throw new TypeException("Negate operator requires operand to be a number.");
+            throw new TypeException(
+                $"Negate operator requires operand to be a number. (Tried -{value ?? "null"})"
+            );
         }
 
         return -number;

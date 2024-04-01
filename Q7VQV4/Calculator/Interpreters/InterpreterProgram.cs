@@ -42,14 +42,9 @@ public class InterpreterProgram(
 
                 _host.WriteLine(result, ConsoleColor.Green);
             }
-            catch (Exception exception)
+            catch
             {
-                _host.WriteLine(
-                    "Unexpected error happened while evaluating expression.",
-                    ConsoleColor.Red
-                );
-
-                _host.WriteLine(exception, ConsoleColor.Red);
+                // Silencing exceptions, because it is the Interpreters job to log exceptions according their types
             }
         }
     }

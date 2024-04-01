@@ -2,7 +2,7 @@ using System.Runtime.Serialization;
 
 namespace Calculator.Evaluators.ExpressionEvals;
 
-public class TypeException : Exception
+public class TypeException : RuntimeException
 {
     public TypeException() { }
 

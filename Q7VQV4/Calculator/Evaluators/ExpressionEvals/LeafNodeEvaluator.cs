@@ -22,7 +22,9 @@ public class LeafNodeEvaluator(IInterpreter<InterpreterState> interpreter) : ISu
         }
         if (leafNode.Token is IdentifierToken identifier)
         {
-            return _interpreter.State.Variables.GetValueOrDefault(identifier.Content);
+            var variables = _interpreter.State.Variables;
+            object? value = variables.GetValueOrDefault(identifier.Content);
+            return value;
         }
 
         throw new EvaluatorException($"Unprocessable leaf node: '{leafNode.Token}'.");
