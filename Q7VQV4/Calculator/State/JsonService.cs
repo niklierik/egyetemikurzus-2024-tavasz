@@ -6,22 +6,32 @@ public class JsonService : IJsonService
 {
     public async Task SaveJsonDocument(string path, object? value)
     {
-        var json = JsonConvert.SerializeObject(
-            value,
-            Formatting.Indented,
-            new JsonSerializerSettings() { TypeNameHandling = TypeNameHandling.Auto }
-        );
+        var json = ToJson(value);
         using var writer = new StreamWriter(path);
         await writer.WriteLineAsync(json);
     }
 
     public async Task<T?> LoadJsonDocument<T>(string path)
     {
-        string content;
+        string json;
         using (var reader = new StreamReader(path))
         {
-            content = await reader.ReadToEndAsync();
+            json = await reader.ReadToEndAsync();
         }
-        return JsonConvert.DeserializeObject<T>(content);
+        return FromJson<T>(json);
+    }
+
+    public string ToJson(object? value)
+    {
+        return JsonConvert.SerializeObject(
+            value,
+            Formatting.Indented,
+            new JsonSerializerSettings() { TypeNameHandling = TypeNameHandling.Auto }
+        );
+    }
+
+    public T? FromJson<T>(string json)
+    {
+        return JsonConvert.DeserializeObject<T>(json);
     }
 }

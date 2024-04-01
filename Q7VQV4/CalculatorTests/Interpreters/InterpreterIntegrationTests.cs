@@ -55,6 +55,7 @@ public class InterpreterIntegrationTests
         serviceCollection.AddSingleton<IParser, Parser>();
         serviceCollection.AddSingleton<IEvaluator, Evaluator>();
         serviceCollection.AddSingleton<IInterpreter<InterpreterState>, Interpreter>();
+        serviceCollection.AddSingleton<IJsonService, JsonService>();
 
         serviceCollection.AddSingleton<ITypeCollector, TypeCollector>();
 
@@ -114,6 +115,7 @@ public class InterpreterIntegrationTests
         new() { Expression = "anotherVariable", Expected = "asd" },
         new() { Expression = "missingVariable", Expected = null },
         new() { Expression = "a = 3", Expected = 3.0 },
+        new() { Expression = "\"asd\"", Expected = "asd" },
     ];
 
     [Theory]

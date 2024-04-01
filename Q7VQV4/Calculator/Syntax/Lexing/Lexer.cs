@@ -2,8 +2,10 @@ using System.Collections.Immutable;
 using System.Globalization;
 using System.Reflection;
 using Calculator.Source;
+using Calculator.State;
 using Calculator.Syntax.Tokens;
 using Calculator.Utils;
+using Newtonsoft.Json;
 
 namespace Calculator.Syntax.Lexing;
 
@@ -11,11 +13,12 @@ namespace Calculator.Syntax.Lexing;
 public class Lexer : ILexer
 {
     private readonly IReadOnlyList<(Type type, string toMatch)> _constantStringTokens;
+    private readonly IJsonService _jsonService;
     private int _currentPosition = 0;
     private string _text = "";
     private char CurrentChar => CharacterAt(_currentPosition);
 
-    public Lexer(ITypeCollector typeCollector)
+    public Lexer(ITypeCollector typeCollector, IJsonService jsonService)
     {
         _constantStringTokens = typeCollector
             .GetConstantStringTokens(GetType().Assembly)
@@ -33,6 +36,7 @@ public class Lexer : ILexer
             })
             .OrderByDescending(tuple => tuple.toMatch.Length)
             .ToImmutableList();
+        _jsonService = jsonService;
     }
 
     private char CharacterAt(int position)
@@ -112,13 +116,51 @@ public class Lexer : ILexer
 
         if (!double.TryParse(rawValue, CultureInfo.InvariantCulture.NumberFormat, out double value))
         {
-            throw new LexerException(
-                $"Failed to convert '{rawValue}' into number.",
-                new TextSlice(_text, start, _currentPosition)
-            );
+            throw new SyntaxException($"Failed to convert '{rawValue}' into number.");
         }
 
         return new NumberLiteralToken(value, rawValue);
+    }
+
+    private ISyntaxToken? LexStringLiteral()
+    {
+        if (CurrentChar != '\"')
+        {
+            return null;
+        }
+
+        string rawValue = "\"";
+        int start = _currentPosition;
+        _currentPosition++;
+        bool breaking = false;
+        while (breaking || CurrentChar != '\"')
+        {
+            if (CurrentChar == '\\')
+            {
+                breaking = true;
+                rawValue += CurrentChar;
+                _currentPosition++;
+            }
+
+            rawValue += CurrentChar;
+            _currentPosition++;
+        }
+        rawValue += "\"";
+        _currentPosition++;
+        try
+        {
+            var parsed = _jsonService.FromJson<string>(rawValue);
+
+            if (parsed is null)
+            {
+                throw new SyntaxException($"Failed to parse '{rawValue}' as string.");
+            }
+            return new StringLiteralToken(parsed, rawValue);
+        }
+        catch (JsonReaderException e)
+        {
+            throw new SyntaxException($"Failed to parse '{rawValue}' as string.", e);
+        }
     }
 
     private ISyntaxToken? LexConstantStringToken()
@@ -164,6 +206,7 @@ public class Lexer : ILexer
         token ??= LexWhitespace();
         token ??= LexIdentifier();
         token ??= LexNumber();
+        token ??= LexStringLiteral();
         token ??= LexConstantStringToken();
         token ??= LexBadToken();
 

@@ -7,12 +7,14 @@ namespace Calculator.Interpreters;
 public class InterpreterProgram(
     IInterpreter<InterpreterState> interpreter,
     IO.IHost host,
-    ILogManager logManager
+    ILogManager logManager,
+    IJsonService jsonService
 ) : IHostedService
 {
     private readonly IInterpreter<InterpreterState> _interpreter = interpreter;
     private readonly IO.IHost _host = host;
     private readonly ILogManager _logManager = logManager;
+    private readonly IJsonService _jsonService = jsonService;
 
     public async Task StartAsync(CancellationToken cancellationToken)
     {
@@ -39,7 +41,7 @@ public class InterpreterProgram(
             }
             if (result is not Exception)
             {
-                _host.WriteLine(result, ConsoleColor.Green);
+                _host.WriteLine(_jsonService.ToJson(result), ConsoleColor.Green);
             }
         }
     }

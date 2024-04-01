@@ -16,9 +16,13 @@ public class LeafNodeEvaluator(IInterpreter<InterpreterState> interpreter) : ISu
         {
             throw new EvaluatorException($"Cannot process node {arg} as Literal.");
         }
-        if (leafNode.Token is NumberLiteralToken literal)
+        if (leafNode.Token is NumberLiteralToken numberLiteral)
         {
-            return literal.Value;
+            return numberLiteral.Value;
+        }
+        if (leafNode.Token is StringLiteralToken stringLiteral)
+        {
+            return stringLiteral.Value;
         }
         if (leafNode.Token is IdentifierToken identifier)
         {

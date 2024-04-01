@@ -1,4 +1,5 @@
 using System.Reflection;
+using Calculator.State;
 using Calculator.Syntax.Lexing;
 using Calculator.Syntax.Tokens;
 using Calculator.Utils;
@@ -26,7 +27,9 @@ public class LexerTest
                     typeof(CloseBracketToken)
                 ]
             );
-        _lexer = new Lexer(typeCollectorMock.Object);
+
+        var jsonService = new Mock<IJsonService>();
+        _lexer = new Lexer(typeCollectorMock.Object, jsonService.Object);
     }
 
     [Category("LexString()")]
