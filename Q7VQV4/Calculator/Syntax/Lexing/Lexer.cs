@@ -101,6 +101,9 @@ public class Lexer : ILexer
             case '/':
                 _currentPosition++;
                 return new DivideToken();
+            case '^':
+                _currentPosition++;
+                return new PowToken();
             case '(':
                 _currentPosition++;
                 return new OpenBracketToken();
