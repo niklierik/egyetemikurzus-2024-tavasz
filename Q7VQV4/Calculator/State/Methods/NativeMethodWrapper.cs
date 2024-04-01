@@ -1,4 +1,5 @@
 using System.Reflection;
+using Calculator.NativeMethods;
 using Calculator.Syntax.Tokens;
 
 namespace Calculator.State;
@@ -63,6 +64,10 @@ public class NativeStaticMethodWrapper : IMethod
 
         try
         {
+            if (method.IsStatic && method.GetCustomAttribute<VarArgsAttribute>() is not null)
+            {
+                return method.Invoke(null, [args]);
+            }
             if (method.IsStatic)
             {
                 return method.Invoke(null, args);
