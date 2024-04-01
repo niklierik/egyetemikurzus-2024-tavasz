@@ -1,1 +1,2 @@
 import __decapitalize__ * from System.Math
+import __decapitalize__ * from System.String

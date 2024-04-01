@@ -16,12 +16,16 @@ public class ImportExpressionEvaluator(IInterpreter<InterpreterState> interprete
     public const string Capitalize = "__capitalize__";
     public const string Upper = "__upper__";
     public const string Lower = "__lower__";
+    public const string UseFullName = "__fullname__";
+    public const string UseClassName = "__classname__";
+    public const string UseMethodName = "__methodname__";
 
     private readonly IInterpreter<InterpreterState> _interpreter = interpreter;
 
     public object? Evaluate(ISyntaxNode arg)
     {
         HashSet<string> knownModifiers = [Decapitalize, Capitalize, Upper, Lower];
+        List<string> prefixes = [""];
 
         if (arg is not ImportExpressionNode importExpressionNode)
         {
@@ -41,6 +45,11 @@ public class ImportExpressionEvaluator(IInterpreter<InterpreterState> interprete
         if (type is null)
         {
             throw new MissingNativeObjectException($"Missing C# class '{id.Content}'.");
+        }
+        prefixes.Add($"{type.Name}.");
+        if (type.FullName is not null)
+        {
+            prefixes.Add($"{type.FullName}.");
         }
 
         bool isAll = importExpressionNode.Args.Any(node => node.Token is MultiplyToken);
@@ -94,14 +103,42 @@ public class ImportExpressionEvaluator(IInterpreter<InterpreterState> interprete
         {
             imports = imports.Select(import => (import.target, import.target.ToUpper())).ToArray();
         }
-        foreach (var (target, alias) in imports)
+        if (
+            activeModifiers.Contains(UseFullName)
+            || activeModifiers.Contains(UseClassName)
+            || activeModifiers.Contains(UseMethodName)
+        )
         {
-            _interpreter.State.Methods[alias] = new NativeStaticMethodWrapper()
+            prefixes.Clear();
+        }
+        if (activeModifiers.Contains(UseFullName))
+        {
+            if (type.FullName is not null)
             {
-                Alias = alias,
-                CSharpClass = type.FullName ?? type.Name,
-                MethodName = target
-            };
+                prefixes.Add($"{type.FullName}.");
+            }
+        }
+        if (activeModifiers.Contains(UseClassName))
+        {
+            prefixes.Add($"{type.Name}.");
+        }
+        if (activeModifiers.Contains(UseMethodName))
+        {
+            prefixes.Add("");
+        }
+
+        foreach (var (target, aliasName) in imports)
+        {
+            foreach (var prefix in prefixes)
+            {
+                var alias = $"{prefix}{aliasName}";
+                _interpreter.State.Methods[alias] = new NativeStaticMethodWrapper()
+                {
+                    Alias = alias,
+                    CSharpClass = type.FullName ?? type.Name,
+                    MethodName = target
+                };
+            }
         }
 
         return null;
