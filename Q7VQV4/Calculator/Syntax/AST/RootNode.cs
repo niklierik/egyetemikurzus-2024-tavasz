@@ -1,6 +1,6 @@
 namespace Calculator.Syntax.AST;
 
-public record class RootNode(ICollection<ISyntaxNode> Expressions) : ISyntaxNode
+public sealed record class RootNode(ICollection<ISyntaxNode> Expressions) : ISyntaxNode
 {
     public ICollection<ISyntaxNode> Children { get; } = Expressions;
 

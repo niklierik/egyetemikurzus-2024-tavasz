@@ -1,6 +1,6 @@
 namespace Calculator.Syntax.AST;
 
-public record class MethodInvocationNode(
+public sealed record class MethodInvocationNode(
     LeafNode MethodName,
     LeafNode OpenArg,
     ICollection<ISyntaxNode> Args,

@@ -1,7 +1,7 @@
 namespace Calculator.Syntax.Tokens;
 
 [ConstantStringToken("from")]
-public record class FromToken : ISyntaxToken
+public sealed record class FromToken : ISyntaxToken
 {
     public ConsoleColor DebugColor => ConsoleColor.Blue;
 

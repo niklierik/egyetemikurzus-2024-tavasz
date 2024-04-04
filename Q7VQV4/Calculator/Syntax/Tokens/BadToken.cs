@@ -1,6 +1,6 @@
 namespace Calculator.Syntax.Tokens;
 
-public record class BadToken(string Content) : ISyntaxToken
+public sealed record class BadToken(string Content) : ISyntaxToken
 {
     public ConsoleColor DebugColor => ConsoleColor.Red;
 

@@ -1,6 +1,6 @@
 namespace Calculator.State;
 
-public record class InterpreterState
+public sealed record class InterpreterState
 {
     public Dictionary<string, object?> Variables { get; init; } = [];
     public Dictionary<string, object?> Consts { get; init; } = [];

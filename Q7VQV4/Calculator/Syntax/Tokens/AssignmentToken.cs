@@ -1,7 +1,7 @@
 namespace Calculator.Syntax.Tokens;
 
 [ConstantStringToken("=")]
-public record class AssignmentToken : IBinaryOperatorToken
+public sealed record class AssignmentToken : IBinaryOperatorToken
 {
     public int BinaryPriority => -1;
 

@@ -1,7 +1,7 @@
 namespace Calculator.Syntax.Tokens;
 
 [ConstantStringToken("*")]
-public record class MultiplyToken : IBinaryOperatorToken
+public sealed record class MultiplyToken : IBinaryOperatorToken
 {
     public ConsoleColor DebugColor => ConsoleColor.Yellow;
 

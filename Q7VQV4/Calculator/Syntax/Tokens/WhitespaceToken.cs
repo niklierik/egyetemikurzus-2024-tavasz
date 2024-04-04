@@ -1,6 +1,6 @@
 namespace Calculator.Syntax.Tokens;
 
-public record class WhitespaceToken : ISyntaxToken
+public sealed record class WhitespaceToken : ISyntaxToken
 {
     public ConsoleColor DebugColor => ConsoleColor.Black;
 

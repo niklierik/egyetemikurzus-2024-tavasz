@@ -1,6 +1,6 @@
 namespace Calculator.Syntax.AST;
 
-public record class ImportExpressionNode(
+public sealed record class ImportExpressionNode(
     LeafNode ImportKeyword,
     ICollection<LeafNode> Args,
     LeafNode From,

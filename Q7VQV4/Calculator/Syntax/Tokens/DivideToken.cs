@@ -1,7 +1,7 @@
 namespace Calculator.Syntax.Tokens;
 
 [ConstantStringToken("/")]
-public record class DivideToken : IBinaryOperatorToken
+public sealed record class DivideToken : IBinaryOperatorToken
 {
     public ConsoleColor DebugColor => ConsoleColor.Yellow;
 

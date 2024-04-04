@@ -1,7 +1,7 @@
 namespace Calculator.Syntax.Tokens;
 
 [ConstantStringToken("import")]
-public record class ImportToken : ISyntaxToken
+public sealed record class ImportToken : ISyntaxToken
 {
     public ConsoleColor DebugColor => ConsoleColor.Blue;
 

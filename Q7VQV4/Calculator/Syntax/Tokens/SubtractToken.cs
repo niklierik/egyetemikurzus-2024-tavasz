@@ -1,7 +1,7 @@
 namespace Calculator.Syntax.Tokens;
 
 [ConstantStringToken("-")]
-public record class SubtractToken : IBinaryOperatorToken, IUnaryOperatorToken
+public sealed record class SubtractToken : IBinaryOperatorToken, IUnaryOperatorToken
 {
     public ConsoleColor DebugColor => ConsoleColor.Yellow;
 

@@ -1,7 +1,10 @@
 namespace Calculator.Syntax.AST;
 
-public record class BinaryExpressionNode(ISyntaxNode Left, LeafNode Operator, ISyntaxNode Right)
-    : IExpressionNode
+public sealed record class BinaryExpressionNode(
+    ISyntaxNode Left,
+    LeafNode Operator,
+    ISyntaxNode Right
+) : IExpressionNode
 {
     public ICollection<ISyntaxNode> Children { get; } = [Left, Operator, Right];
 

@@ -1,6 +1,6 @@
 namespace Calculator.State;
 
-public record class InterpreterConfig
+public sealed record class InterpreterConfig
 {
     public bool PrintAstToConsole { get; } = false;
 

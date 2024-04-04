@@ -1,6 +1,7 @@
 namespace Calculator.Syntax.AST;
 
-public record class UnaryExpressionNode(LeafNode Operator, ISyntaxNode Operand) : IExpressionNode
+public sealed record class UnaryExpressionNode(LeafNode Operator, ISyntaxNode Operand)
+    : IExpressionNode
 {
     public ICollection<ISyntaxNode> Children { get; } = [Operator, Operand];
 
