@@ -7,9 +7,9 @@ using Calculator.Syntax.Tokens;
 namespace Calculator.Evaluators.ExpressionEvals.BinaryOps;
 
 [BinaryOp(typeof(AssignmentToken), keepLeftTree: true)]
-public class AssignmentOperator(IInterpreter<InterpreterState> interpreter) : IBinaryOperator
+public class AssignmentOperator(IInterpreter interpreter) : IBinaryOperator
 {
-    private readonly IInterpreter<InterpreterState> _interpreter = interpreter;
+    private readonly IInterpreter _interpreter = interpreter;
 
     public object? Evaluate(object? leftValue, object? rightValue)
     {

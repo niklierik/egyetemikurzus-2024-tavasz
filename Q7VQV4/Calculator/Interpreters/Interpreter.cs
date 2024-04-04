@@ -19,7 +19,7 @@ public class Interpreter(
     INodePrettyPrinter nodePrettyPrinter,
     IHost host,
     IStateLoader<InterpreterState> stateProvider
-) : IInterpreter<InterpreterState>
+) : IInterpreter
 {
     private readonly ILexer _lexer = lexer;
     private readonly IParser _parser = parser;
@@ -33,7 +33,6 @@ public class Interpreter(
     public async Task Init()
     {
         _state = await _stateProvider.LoadState("interp.json");
-        InterpreterState.AddNeccessaryInfo(_state);
         foreach (var pathFolder in _state.Paths)
         {
             var initFile = Path.Join(pathFolder, "init.script");
@@ -83,7 +82,7 @@ public class Interpreter(
                 ast,
                 (text, color) =>
                 {
-                    if (State.PrintAstToConsole)
+                    if (State.Config.PrintAstToConsole)
                     {
                         _host.Write(text, color);
                     }
@@ -103,6 +102,10 @@ public class Interpreter(
             _host.WriteLine("Syntax error:", ConsoleColor.Red);
             _host.WriteLine(e.Message, ConsoleColor.Red);
             await _logger.Error(e);
+            if (State.Config.PrintStacktraces == PrintStacktracesOptions.All)
+            {
+                _host.WriteLine(e.StackTrace);
+            }
             return e;
         }
         catch (EvaluatorException e)
@@ -110,6 +113,10 @@ public class Interpreter(
             _host.WriteLine("Evaluator error (invalid setup):", ConsoleColor.Red);
             _host.WriteLine(e.Message, ConsoleColor.Red);
             await _logger.Error(e);
+            if (State.Config.PrintStacktraces == PrintStacktracesOptions.All)
+            {
+                _host.WriteLine(e.StackTrace);
+            }
             return e;
         }
         catch (RuntimeException e)
@@ -117,13 +124,21 @@ public class Interpreter(
             _host.WriteLine("Runtime error:", ConsoleColor.Red);
             _host.WriteLine(e.Message, ConsoleColor.Red);
             await _logger.Error(e);
+            if (State.Config.PrintStacktraces == PrintStacktracesOptions.All)
+            {
+                _host.WriteLine(e.StackTrace);
+            }
             return e;
         }
         catch (Exception e)
         {
             _host.WriteLine("Unhandled error:");
-            _host.WriteLine(e, ConsoleColor.Red);
+            _host.WriteLine(e.Message, ConsoleColor.Red);
             await _logger.Error(e);
+            if (State.Config.PrintStacktraces > PrintStacktracesOptions.None)
+            {
+                _host.WriteLine(e.StackTrace);
+            }
             return e;
         }
     }

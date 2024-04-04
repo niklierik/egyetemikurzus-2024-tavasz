@@ -21,7 +21,7 @@ public class InterpreterIntegrationTestFixture
 
 public class InterpreterIntegrationTests
 {
-    IInterpreter<InterpreterState> _interpreter;
+    IInterpreter _interpreter;
     InterpreterState _state;
 
     [SetUp]
@@ -54,7 +54,7 @@ public class InterpreterIntegrationTests
         serviceCollection.AddSingleton<ILexer, Lexer>();
         serviceCollection.AddSingleton<IParser, Parser>();
         serviceCollection.AddSingleton<IEvaluator, Evaluator>();
-        serviceCollection.AddSingleton<IInterpreter<InterpreterState>, Interpreter>();
+        serviceCollection.AddSingleton<IInterpreter, Interpreter>();
         serviceCollection.AddSingleton<IJsonService, JsonService>();
 
         serviceCollection.AddSingleton<ITypeCollector, TypeCollector>();
@@ -89,7 +89,7 @@ public class InterpreterIntegrationTests
 
         IServiceProvider provider = serviceCollection.BuildServiceProvider();
 
-        _interpreter = provider.GetService<IInterpreter<InterpreterState>>()!;
+        _interpreter = provider.GetService<IInterpreter>()!;
 
         Assert.That(_interpreter, Is.Not.Null);
     }

@@ -5,13 +5,13 @@ using Microsoft.Extensions.Hosting;
 namespace Calculator.Interpreters;
 
 public class InterpreterProgram(
-    IInterpreter<InterpreterState> interpreter,
+    IInterpreter interpreter,
     IO.IHost host,
     ILogManager logManager,
     IJsonService jsonService
 ) : IHostedService
 {
-    private readonly IInterpreter<InterpreterState> _interpreter = interpreter;
+    private readonly IInterpreter _interpreter = interpreter;
     private readonly IO.IHost _host = host;
     private readonly ILogManager _logManager = logManager;
     private readonly IJsonService _jsonService = jsonService;

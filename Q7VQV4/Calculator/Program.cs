@@ -45,9 +45,12 @@ hostApplicationBuilder.Services.AddSingleton<IHost, ConsoleHost>();
 hostApplicationBuilder.Services.AddSingleton<ILogManager, LogManager>();
 hostApplicationBuilder.Services.AddSingleton<ILogTargetProvider, LogTargetProvider>();
 hostApplicationBuilder.Services.AddSingleton<INodePrettyPrinter, NodePrettyPrinter>();
-hostApplicationBuilder.Services.AddSingleton<IInterpreter<InterpreterState>, Interpreter>();
+hostApplicationBuilder.Services.AddSingleton<IInterpreter, Interpreter>();
 hostApplicationBuilder.Services.AddSingleton<IJsonService, JsonService>();
-hostApplicationBuilder.Services.AddSingleton<IStateLoader<InterpreterState>, StateLoader>();
+hostApplicationBuilder.Services.AddSingleton<
+    IStateLoader<InterpreterState>,
+    InterpreterStateLoader
+>();
 hostApplicationBuilder.Services.AddSingleton<ITypeCollector>(typeCollector);
 
 using var app = hostApplicationBuilder.Build();

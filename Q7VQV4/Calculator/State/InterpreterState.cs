@@ -1,23 +1,15 @@
 namespace Calculator.State;
 
-public class InterpreterState
+public record class InterpreterState
 {
-    public bool PrintAstToConsole { get; set; } = false;
+    public Dictionary<string, object?> Variables { get; init; } = [];
+    public Dictionary<string, object?> Consts { get; init; } = [];
 
-    public Dictionary<string, object?> Variables { get; set; } = [];
-    public Dictionary<string, object?> Consts { get; set; } =
-        new()
-        {
-            { "true", true },
-            { "false", false },
-            { "pi", Math.PI },
-            { "e", Math.E },
-            { "null", null }
-        };
+    public InterpreterConfig Config { get; init; } = new();
 
-    public Dictionary<string, IMethod> Methods { get; set; } = [];
+    public Dictionary<string, IMethod> Methods { get; init; } = [];
 
-    public List<string> Paths { get; } = ["scripts"];
+    public List<string> Paths { get; init; } = ["scripts"];
 
     public InterpreterState() { }
 
@@ -31,5 +23,18 @@ public class InterpreterState
         return Variables.GetValueOrDefault(name);
     }
 
-    public static void AddNeccessaryInfo(InterpreterState state) { }
+    public static InterpreterState Default()
+    {
+        return new()
+        {
+            Consts = new Dictionary<string, object?>()
+            {
+                { "true", true },
+                { "false", false },
+                { "pi", Math.PI },
+                { "e", Math.E },
+                { "null", null }
+            }
+        };
+    }
 }

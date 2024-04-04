@@ -6,9 +6,9 @@ using Calculator.Syntax.Tokens;
 namespace Calculator.Evaluators.ExpressionEvals;
 
 [EvaluatorFor(typeof(LeafNode))]
-public class LeafNodeEvaluator(IInterpreter<InterpreterState> interpreter) : ISubEvaluator
+public class LeafNodeEvaluator(IInterpreter interpreter) : ISubEvaluator
 {
-    private readonly IInterpreter<InterpreterState> _interpreter = interpreter;
+    private readonly IInterpreter _interpreter = interpreter;
 
     public object? Evaluate(ISyntaxNode arg)
     {

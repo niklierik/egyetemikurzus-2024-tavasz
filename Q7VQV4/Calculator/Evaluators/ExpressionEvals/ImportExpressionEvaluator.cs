@@ -10,7 +10,7 @@ using Calculator.Utils;
 namespace Calculator.Evaluators.ExpressionEvals;
 
 [EvaluatorFor(typeof(ImportExpressionNode))]
-public class ImportExpressionEvaluator(IInterpreter<InterpreterState> interpreter) : ISubEvaluator
+public class ImportExpressionEvaluator(IInterpreter interpreter) : ISubEvaluator
 {
     public const string Decapitalize = "__decapitalize__";
     public const string Capitalize = "__capitalize__";
@@ -20,7 +20,7 @@ public class ImportExpressionEvaluator(IInterpreter<InterpreterState> interprete
     public const string UseClassName = "__classname__";
     public const string UseMethodName = "__methodname__";
 
-    private readonly IInterpreter<InterpreterState> _interpreter = interpreter;
+    private readonly IInterpreter _interpreter = interpreter;
 
     public object? Evaluate(ISyntaxNode arg)
     {

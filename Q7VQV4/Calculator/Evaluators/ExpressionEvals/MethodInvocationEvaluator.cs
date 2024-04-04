@@ -8,12 +8,10 @@ using Calculator.Syntax.Tokens;
 namespace Calculator.Evaluators.ExpressionEvals;
 
 [EvaluatorFor(typeof(MethodInvocationNode))]
-public class MethodInvocationEvaluator(
-    IInterpreter<InterpreterState> interpreter,
-    IEvaluator evaluator
-) : ISubEvaluator
+public class MethodInvocationEvaluator(IInterpreter interpreter, IEvaluator evaluator)
+    : ISubEvaluator
 {
-    private readonly IInterpreter<InterpreterState> _interpreter = interpreter;
+    private readonly IInterpreter _interpreter = interpreter;
     private readonly IEvaluator _evaluator = evaluator;
 
     public object? Evaluate(ISyntaxNode arg)
