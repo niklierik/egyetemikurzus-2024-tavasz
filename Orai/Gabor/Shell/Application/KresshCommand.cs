@@ -16,6 +16,11 @@ namespace Shell.Application
         public void Execute(IHost host, string[] args)
         {
             throw new NullReferenceException();
+
+            string s = "abcd";
+
+            string other = s + "abcd";
+
         }
     }
 }
