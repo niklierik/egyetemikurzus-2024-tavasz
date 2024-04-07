@@ -10,7 +10,7 @@ public class LeafNodeEvaluator(IInterpreter interpreter) : ISubEvaluator
 {
     private readonly IInterpreter _interpreter = interpreter;
 
-    public object? Evaluate(ISyntaxNode arg)
+    public Task<object?> Evaluate(ISyntaxNode arg)
     {
         if (arg is not LeafNode leafNode)
         {
@@ -18,15 +18,15 @@ public class LeafNodeEvaluator(IInterpreter interpreter) : ISubEvaluator
         }
         if (leafNode.Token is NumberLiteralToken numberLiteral)
         {
-            return numberLiteral.Value;
+            return Task.FromResult<object?>(numberLiteral.Value);
         }
         if (leafNode.Token is StringLiteralToken stringLiteral)
         {
-            return stringLiteral.Value;
+            return Task.FromResult<object?>(stringLiteral.Value);
         }
         if (leafNode.Token is IdentifierToken identifier)
         {
-            return _interpreter.State.GetVariable(identifier.Content);
+            return Task.FromResult(_interpreter.State.GetVariable(identifier.Content));
         }
 
         throw new EvaluatorException($"Unprocessable leaf node: '{leafNode.Token}'.");

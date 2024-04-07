@@ -8,7 +8,7 @@ namespace Calculator.Evaluators;
 
 public interface IEvaluator
 {
-    public object? Evaluate(RootNode node);
+    public Task<object?> Evaluate(RootNode node);
 
     public ISubEvaluator GetEvaluatorFor(ISyntaxNode node);
 

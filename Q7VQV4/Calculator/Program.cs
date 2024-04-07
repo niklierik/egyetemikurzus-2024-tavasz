@@ -6,6 +6,7 @@ using Calculator.Interpreters;
 using Calculator.IO;
 using Calculator.IO.Logging;
 using Calculator.State;
+using Calculator.State.Methods;
 using Calculator.Syntax.Lexing;
 using Calculator.Syntax.Parser;
 using Calculator.Utils;
@@ -48,10 +49,12 @@ hostApplicationBuilder.Services.AddSingleton<INodePrettyPrinter, NodePrettyPrint
 hostApplicationBuilder.Services.AddSingleton<IInterpreter, Interpreter>();
 hostApplicationBuilder.Services.AddSingleton<IJsonService, JsonService>();
 hostApplicationBuilder.Services.AddSingleton<
-    IStateLoader<InterpreterState>,
-    InterpreterStateLoader
+    IConfigLoader<InterpreterConfig>,
+    InterpreterConfigLoader
 >();
 hostApplicationBuilder.Services.AddSingleton<ITypeCollector>(typeCollector);
+
+hostApplicationBuilder.Services.AddSingleton<IConfigMethod, ConfigMethod>();
 
 using var app = hostApplicationBuilder.Build();
 

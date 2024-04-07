@@ -77,15 +77,15 @@ public class InterpreterIntegrationTests
         _state = new();
         _state.Variables.Add("someVariable", 3.0);
         _state.Variables.Add("anotherVariable", "asd");
-        var stateLoaderMock = new Mock<IStateLoader<InterpreterState>>();
+        var stateLoaderMock = new Mock<IConfigLoader<InterpreterState>>();
         stateLoaderMock
-            .Setup(stateLoader => stateLoader.LoadState(It.IsAny<string>()))
+            .Setup(stateLoader => stateLoader.Load(It.IsAny<string>()))
             .ReturnsAsync(_state);
         stateLoaderMock.Setup(stateLoader =>
-            stateLoader.SaveState(It.IsAny<string>(), It.IsAny<InterpreterState>())
+            stateLoader.Save(It.IsAny<string>(), It.IsAny<InterpreterState>())
         );
 
-        serviceCollection.AddSingleton<IStateLoader<InterpreterState>>(stateLoaderMock.Object);
+        serviceCollection.AddSingleton<IConfigLoader<InterpreterState>>(stateLoaderMock.Object);
 
         IServiceProvider provider = serviceCollection.BuildServiceProvider();
 

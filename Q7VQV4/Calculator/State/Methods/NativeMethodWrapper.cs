@@ -36,63 +36,66 @@ public class NativeStaticMethodWrapper : IMethod
         }
     }
 
-    public object? Execute(params object?[] args)
+    public Task<object?> Execute(params object?[] args)
     {
-        var type = Type.GetType(CSharpClass);
-        if (type is null)
+        return Task.Run(() =>
         {
-            throw new MissingNativeObjectException(
-                $"There is no C# class called '{CSharpClass}' for '{Alias}'."
-            );
-        }
-
-        MethodInfo? method = GetMethod(type, MethodName, args);
-        if (method is null)
-        {
-            throw new MissingNativeObjectException(
-                $"There is no C# method called '{CSharpClass}.{MethodName}' for {Alias}."
-            );
-        }
-
-        string argumentTypes = string.Join(
-            ", ",
-            args.Select(arg =>
+            var type = Type.GetType(CSharpClass);
+            if (type is null)
             {
-                var type = arg?.GetType() ?? typeof(void);
-                return $"{type} {arg}";
-            })
-        );
-
-        try
-        {
-            if (method.IsStatic && method.GetCustomAttribute<VarArgsAttribute>() is not null)
-            {
-                return method.Invoke(null, [args]);
-            }
-            if (method.IsStatic)
-            {
-                return method.Invoke(null, args);
-            }
-
-            object? target = args[0];
-            if (args.Length == 1)
-            {
-                return method.Invoke(target, Array.Empty<object>());
-            }
-
-            args = args[1..];
-            return method.Invoke(target, args);
-        }
-        catch (Exception exception)
-        {
-            if (exception is ArgumentException || exception is TargetParameterCountException)
-            {
-                throw new SyntaxException(
-                    $"Cannot use method {Alias} -> {CSharpClass}.{MethodName} with arguments ({argumentTypes}).",
-                    exception
+                throw new MissingNativeObjectException(
+                    $"There is no C# class called '{CSharpClass}' for '{Alias}'."
                 );
             }
-            throw;
-        }
+
+            MethodInfo? method = GetMethod(type, MethodName, args);
+            if (method is null)
+            {
+                throw new MissingNativeObjectException(
+                    $"There is no C# method called '{CSharpClass}.{MethodName}' for {Alias}."
+                );
+            }
+
+            string argumentTypes = string.Join(
+                ", ",
+                args.Select(arg =>
+                {
+                    var type = arg?.GetType() ?? typeof(void);
+                    return $"{type} {arg}";
+                })
+            );
+
+            try
+            {
+                if (method.IsStatic && method.GetCustomAttribute<VarArgsAttribute>() is not null)
+                {
+                    return method.Invoke(null, [args]);
+                }
+                if (method.IsStatic)
+                {
+                    return method.Invoke(null, args);
+                }
+
+                object? target = args[0];
+                if (args.Length == 1)
+                {
+                    return method.Invoke(target, Array.Empty<object>());
+                }
+
+                args = args[1..];
+                return method.Invoke(target, args);
+            }
+            catch (Exception exception)
+            {
+                if (exception is ArgumentException || exception is TargetParameterCountException)
+                {
+                    throw new SyntaxException(
+                        $"Cannot use method {Alias} -> {CSharpClass}.{MethodName} with arguments ({argumentTypes}).",
+                        exception
+                    );
+                }
+                throw;
+            }
+        });
     }
 }

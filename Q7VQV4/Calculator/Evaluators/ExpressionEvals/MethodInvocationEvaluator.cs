@@ -14,7 +14,7 @@ public class MethodInvocationEvaluator(IInterpreter interpreter, IEvaluator eval
     private readonly IInterpreter _interpreter = interpreter;
     private readonly IEvaluator _evaluator = evaluator;
 
-    public object? Evaluate(ISyntaxNode arg)
+    public async Task<object?> Evaluate(ISyntaxNode arg)
     {
         if (arg is not MethodInvocationNode methodInvocationNode)
         {
@@ -35,18 +35,19 @@ public class MethodInvocationEvaluator(IInterpreter interpreter, IEvaluator eval
             throw new MissingNativeObjectException($"Method '{name}' does not exist.");
         }
 
-        object?[] args = methodInvocationNode
-            .Args.Select(arg =>
-            {
-                var evaluator = _evaluator.GetEvaluatorFor(arg);
-                if (evaluator is null)
-                {
-                    throw new EvaluatorException($"Cannot get evaluator for node {evaluator}.");
-                }
-                return evaluator.Evaluate(arg);
-            })
-            .ToArray();
+        ISyntaxNode[] nodeArgs = methodInvocationNode.Args.ToArray();
+        object?[] args = new object[nodeArgs.Length];
 
-        return method.Execute(args);
+        for (int i = 0; i < args.Length; i++)
+        {
+            var evaluator = _evaluator.GetEvaluatorFor(nodeArgs[i]);
+            if (evaluator is null)
+            {
+                throw new EvaluatorException($"Cannot get evaluator for node {evaluator}.");
+            }
+            args[i] = await evaluator.Evaluate(nodeArgs[i]);
+        }
+
+        return await method.Execute(args);
     }
 }

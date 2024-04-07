@@ -1,8 +1,12 @@
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+
 namespace Calculator.State;
 
-public sealed record class InterpreterConfig
+public class InterpreterConfig
 {
-    public bool PrintAstToConsole { get; } = false;
+    public bool PrintAstToConsole { get; set; } = false;
 
-    public PrintStacktracesOptions PrintStacktraces { get; } = PrintStacktracesOptions.None;
+    [JsonConverter(typeof(StringEnumConverter))]
+    public PrintStacktracesOptions PrintStacktraces { get; set; } = PrintStacktracesOptions.None;
 }

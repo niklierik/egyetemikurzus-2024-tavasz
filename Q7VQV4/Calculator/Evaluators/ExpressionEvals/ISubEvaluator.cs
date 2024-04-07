@@ -4,5 +4,5 @@ namespace Calculator.Evaluators.ExpressionEvals;
 
 public interface ISubEvaluator
 {
-    public object? Evaluate(ISyntaxNode arg);
+    public Task<object?> Evaluate(ISyntaxNode arg);
 }

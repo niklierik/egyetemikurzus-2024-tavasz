@@ -10,7 +10,7 @@ public class UnaryExpressionEvaluator(IEvaluator evaluator) : ISubEvaluator
 {
     private readonly IEvaluator _evaluator = evaluator;
 
-    public object? Evaluate(ISyntaxNode arg)
+    public async Task<object?> Evaluate(ISyntaxNode arg)
     {
         if (arg is not UnaryExpressionNode unaryExpression)
         {
@@ -20,7 +20,7 @@ public class UnaryExpressionEvaluator(IEvaluator evaluator) : ISubEvaluator
 
         ISubEvaluator operandEvaluator = _evaluator.GetEvaluatorFor(operandArg);
 
-        object? operandValue = operandEvaluator.Evaluate(operandArg);
+        object? operandValue = await operandEvaluator.Evaluate(operandArg);
 
         ISyntaxToken operatorSymbol = unaryExpression.Operator.Token;
         if (operatorSymbol is not IUnaryOperatorToken token)

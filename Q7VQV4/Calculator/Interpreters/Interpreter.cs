@@ -4,55 +4,72 @@ using Calculator.Evaluators.Exceptions;
 using Calculator.IO;
 using Calculator.IO.Logging;
 using Calculator.State;
+using Calculator.State.Methods;
 using Calculator.Syntax.AST;
 using Calculator.Syntax.Lexing;
 using Calculator.Syntax.Parser;
 using Calculator.Syntax.Tokens;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Calculator.Interpreters;
 
-public class Interpreter(
-    ILexer lexer,
-    IParser parser,
-    IEvaluator evaluator,
-    ILogManager logger,
-    INodePrettyPrinter nodePrettyPrinter,
-    IHost host,
-    IStateLoader<InterpreterState> stateProvider
-) : IInterpreter
+public class Interpreter : IInterpreter
 {
-    private readonly ILexer _lexer = lexer;
-    private readonly IParser _parser = parser;
-    private readonly IEvaluator _evaluator = evaluator;
-    private readonly ILogManager _logger = logger;
-    private readonly IHost _host = host;
-    private readonly IStateLoader<InterpreterState> _stateProvider = stateProvider;
+    private readonly ILexer _lexer;
+    private readonly IParser _parser;
+    private readonly IEvaluator _evaluator;
+    private readonly ILogManager _logger;
+    private readonly INodePrettyPrinter _nodePrettyPrinter;
+    private readonly IHost _host;
+    private readonly IConfigLoader<InterpreterConfig> _configLoader;
+    private readonly IServiceProvider _serviceProvider;
 
-    private InterpreterState? _state;
+    public InterpreterState State { get; }
+
+    public Interpreter(
+        ILexer lexer,
+        IParser parser,
+        IEvaluator evaluator,
+        ILogManager logger,
+        INodePrettyPrinter nodePrettyPrinter,
+        IHost host,
+        IConfigLoader<InterpreterConfig> configLoader,
+        IServiceProvider serviceProvider
+    )
+    {
+        _lexer = lexer;
+        _parser = parser;
+        _evaluator = evaluator;
+        _logger = logger;
+        _nodePrettyPrinter = nodePrettyPrinter;
+        _host = host;
+        _configLoader = configLoader;
+        _serviceProvider = serviceProvider;
+        State = new InterpreterState()
+        {
+            Consts = new Dictionary<string, object?>()
+            {
+                { "true", true },
+                { "false", false },
+                { "pi", Math.PI },
+                { "e", Math.E },
+                { "null", null },
+                { "interpreter", this },
+            },
+            Methods = new Dictionary<string, IMethod>()
+        };
+    }
 
     public async Task Init()
     {
-        _state = await _stateProvider.LoadState("interp.json");
-        foreach (var pathFolder in _state.Paths)
-        {
-            var initFile = Path.Join(pathFolder, "init.script");
-            if (File.Exists(initFile))
-            {
-                await ExecuteFile(initFile);
-            }
-        }
-    }
+        State.Config = await _configLoader.Load("interp.json");
 
-    public InterpreterState State
-    {
-        get
-        {
-            if (_state is null)
-            {
-                throw new InvalidOperationException("Tried to access state before it was loaded.");
-            }
-            return _state;
-        }
+        await LoadInitScripts();
+
+        State.Consts["interpreter"] = this;
+        State.Consts["state"] = State;
+        State.Consts["config"] = State.Config;
+        State.Methods["config"] = _serviceProvider.GetRequiredService<IConfigMethod>();
     }
 
     public async Task<object?> ExecuteFile(string path)
@@ -78,7 +95,7 @@ public class Interpreter(
 
             RootNode ast = _parser.Parse(tokens);
             StringBuilder prettyAstBuilder = new StringBuilder(Environment.NewLine);
-            await nodePrettyPrinter.Print(
+            await _nodePrettyPrinter.Print(
                 ast,
                 (text, color) =>
                 {
@@ -93,7 +110,7 @@ public class Interpreter(
 
             await _logger.Debug(prettyAstBuilder.ToString());
 
-            object? result = _evaluator.Evaluate(ast);
+            object? result = await _evaluator.Evaluate(ast);
             State.Variables["ANS"] = result;
             return result;
         }
@@ -140,6 +157,18 @@ public class Interpreter(
                 _host.WriteLine(e.StackTrace);
             }
             return e;
+        }
+    }
+
+    private async Task LoadInitScripts()
+    {
+        foreach (var pathFolder in State.Paths)
+        {
+            var initFile = Path.Join(pathFolder, "init.script");
+            if (File.Exists(initFile))
+            {
+                await ExecuteFile(initFile);
+            }
         }
     }
 }

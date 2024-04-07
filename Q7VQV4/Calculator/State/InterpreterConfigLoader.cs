@@ -3,13 +3,13 @@ using Calculator.IO.Logging;
 
 namespace Calculator.State;
 
-public class InterpreterStateLoader(IJsonService jsonService, ILogManager logger)
-    : IStateLoader<InterpreterState>
+public class InterpreterConfigLoader(IJsonService jsonService, ILogManager logger)
+    : IConfigLoader<InterpreterConfig>
 {
     private readonly IJsonService _jsonService = jsonService;
     private readonly ILogManager _logger = logger;
 
-    public async Task<InterpreterState> LoadState(string path)
+    public async Task<InterpreterConfig> Load(string path)
     {
         try
         {
@@ -18,7 +18,7 @@ public class InterpreterStateLoader(IJsonService jsonService, ILogManager logger
                 await _logger.Debug($"Missing state file, creating new at {path}.");
                 return await CreateAndSaveNewState(path);
             }
-            return await _jsonService.LoadJsonDocument<InterpreterState>(path) ?? new();
+            return await _jsonService.LoadJsonDocument<InterpreterConfig>(path) ?? new();
         }
         catch (JsonException e)
         {
@@ -37,14 +37,14 @@ public class InterpreterStateLoader(IJsonService jsonService, ILogManager logger
         }
     }
 
-    private async Task<InterpreterState> CreateAndSaveNewState(string path)
+    private async Task<InterpreterConfig> CreateAndSaveNewState(string path)
     {
-        InterpreterState state = new();
-        await SaveState(path, state);
+        var state = new InterpreterConfig();
+        await Save(path, state);
         return state;
     }
 
-    public async Task SaveState(string path, InterpreterState state)
+    public async Task Save(string path, InterpreterConfig state)
     {
         try
         {

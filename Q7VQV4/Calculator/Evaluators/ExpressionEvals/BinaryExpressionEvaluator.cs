@@ -11,7 +11,7 @@ public class BinaryExpressionEvaluator(IEvaluator evaluator) : ISubEvaluator
 {
     private readonly IEvaluator _evaluator = evaluator;
 
-    public object? Evaluate(ISyntaxNode arg)
+    public async Task<object?> Evaluate(ISyntaxNode arg)
     {
         if (arg is not BinaryExpressionNode binaryExpression)
         {
@@ -44,13 +44,13 @@ public class BinaryExpressionEvaluator(IEvaluator evaluator) : ISubEvaluator
         object? leftValue = leftArg;
         if (!binaryOpAttribute.KeepLeftTree)
         {
-            leftValue = leftEvaluator.Evaluate(leftArg);
+            leftValue = await leftEvaluator.Evaluate(leftArg);
         }
 
         object? rightValue = rightArg;
         if (!binaryOpAttribute.KeepRightTree)
         {
-            rightValue = rightEvaluator.Evaluate(rightArg);
+            rightValue = await rightEvaluator.Evaluate(rightArg);
         }
 
         object? result = op.Evaluate(leftValue, rightValue);

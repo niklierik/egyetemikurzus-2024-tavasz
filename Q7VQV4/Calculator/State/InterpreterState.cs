@@ -1,11 +1,13 @@
+using Calculator.State.Methods;
+
 namespace Calculator.State;
 
-public sealed record class InterpreterState
+public class InterpreterState
 {
     public Dictionary<string, object?> Variables { get; init; } = [];
     public Dictionary<string, object?> Consts { get; init; } = [];
 
-    public InterpreterConfig Config { get; init; } = new();
+    public InterpreterConfig Config { get; set; } = new();
 
     public Dictionary<string, IMethod> Methods { get; init; } = [];
 
@@ -21,20 +23,5 @@ public sealed record class InterpreterState
             return value;
         }
         return Variables.GetValueOrDefault(name);
-    }
-
-    public static InterpreterState Default()
-    {
-        return new()
-        {
-            Consts = new Dictionary<string, object?>()
-            {
-                { "true", true },
-                { "false", false },
-                { "pi", Math.PI },
-                { "e", Math.E },
-                { "null", null }
-            }
-        };
     }
 }

@@ -1,5 +1,4 @@
 using System.Collections.Immutable;
-using System.Reflection;
 using Calculator.Evaluators.Exceptions;
 using Calculator.Interpreters;
 using Calculator.State;
@@ -7,7 +6,7 @@ using Calculator.Syntax.AST;
 using Calculator.Syntax.Tokens;
 using Calculator.Utils;
 
-namespace Calculator.Evaluators.ExpressionEvals;
+namespace Calculator.Evaluators.ExpressionEvals.Keywords;
 
 [EvaluatorFor(typeof(ImportExpressionNode))]
 public class ImportExpressionEvaluator(IInterpreter interpreter) : ISubEvaluator
@@ -22,7 +21,7 @@ public class ImportExpressionEvaluator(IInterpreter interpreter) : ISubEvaluator
 
     private readonly IInterpreter _interpreter = interpreter;
 
-    public object? Evaluate(ISyntaxNode arg)
+    public Task<object?> Evaluate(ISyntaxNode arg)
     {
         HashSet<string> knownModifiers = [Decapitalize, Capitalize, Upper, Lower];
         List<string> prefixes = [""];
@@ -141,6 +140,6 @@ public class ImportExpressionEvaluator(IInterpreter interpreter) : ISubEvaluator
             }
         }
 
-        return null;
+        return Task.FromResult<object?>(null);
     }
 }

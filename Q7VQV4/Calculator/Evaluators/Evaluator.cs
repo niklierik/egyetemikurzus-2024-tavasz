@@ -25,13 +25,13 @@ public class Evaluator : IEvaluator
         _unaryOperators = typeCollector.GetUnaryOps(assembly);
     }
 
-    public object? Evaluate(RootNode root)
+    public async Task<object?> Evaluate(RootNode root)
     {
         object? previous = null;
 
         foreach (ISyntaxNode node in root.Children)
         {
-            previous = GetEvaluatorFor(node).Evaluate(node);
+            previous = await GetEvaluatorFor(node).Evaluate(node);
         }
 
         return previous;

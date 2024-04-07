@@ -1,6 +1,7 @@
 using Calculator.IO.Logging;
 using Calculator.State;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json;
 
 namespace Calculator.Interpreters;
 
@@ -41,7 +42,7 @@ public class InterpreterProgram(
             }
             if (result is not Exception)
             {
-                _host.WriteLine(_jsonService.ToJson(result), ConsoleColor.Green);
+                PrettyPrintResult(result);
             }
         }
     }
@@ -50,5 +51,25 @@ public class InterpreterProgram(
     {
         await _logManager.Debug("Closing app");
         _logManager.Dispose();
+    }
+
+    private void PrettyPrintResult(object result)
+    {
+        try
+        {
+            _host.Write(_jsonService.ToJson(result), ConsoleColor.Green);
+            _host.Write(" (", ConsoleColor.DarkGray);
+            _host.Write(result.GetType(), ConsoleColor.Cyan);
+            _host.Write(")", ConsoleColor.DarkGray);
+            _host.WriteLine();
+        }
+        catch (JsonException)
+        {
+            _host.Write("<non-serializable>", ConsoleColor.Green);
+            _host.Write(" (", ConsoleColor.DarkGray);
+            _host.Write(result.GetType(), ConsoleColor.Cyan);
+            _host.Write(")", ConsoleColor.DarkGray);
+            _host.WriteLine();
+        }
     }
 }
