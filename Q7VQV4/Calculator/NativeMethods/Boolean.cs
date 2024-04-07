@@ -1,5 +1,3 @@
-using Calculator.Evaluators.Exceptions;
-
 namespace Calculator.NativeMethods;
 
 // These methods are exported for the calculator, so the user can invoke them
@@ -13,7 +11,7 @@ public static class Boolean
             {
                 if (value is not bool b)
                 {
-                    throw new TypeException("Boolean.And only accepts boolean arguments.");
+                    return Bool(value);
                 }
                 return b;
             })

@@ -1,4 +1,7 @@
 import __decapitalize__ * from System.Math
 import __decapitalize__ * from System.String
+import __decapitalize__ * from System.Environment
 import __decapitalize__ * from Calculator.Utils.StringUtils
 import __decapitalize__ * from Calculator.NativeMethods.Boolean
+import __decapitalize__ * from Calculator.NativeMethods.Types
+import __decapitalize__ * from Calculator.NativeMethods.Sys

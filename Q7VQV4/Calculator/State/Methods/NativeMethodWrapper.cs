@@ -1,4 +1,5 @@
 using System.Reflection;
+using Calculator.Evaluators.Exceptions;
 using Calculator.NativeMethods;
 using Calculator.Syntax.Tokens;
 
@@ -40,7 +41,7 @@ public class NativeStaticMethodWrapper : IMethod
         var type = Type.GetType(CSharpClass);
         if (type is null)
         {
-            throw new MissingMethodException(
+            throw new MissingNativeObjectException(
                 $"There is no C# class called '{CSharpClass}' for '{Alias}'."
             );
         }
@@ -48,7 +49,7 @@ public class NativeStaticMethodWrapper : IMethod
         MethodInfo? method = GetMethod(type, MethodName, args);
         if (method is null)
         {
-            throw new MissingMethodException(
+            throw new MissingNativeObjectException(
                 $"There is no C# method called '{CSharpClass}.{MethodName}' for {Alias}."
             );
         }
