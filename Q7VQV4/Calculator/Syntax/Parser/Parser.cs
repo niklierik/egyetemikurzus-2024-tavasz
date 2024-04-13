@@ -8,7 +8,7 @@ namespace Calculator.Syntax.Parser;
 // TODO: remove state
 public class Parser : IParser
 {
-    private IReadOnlyList<ISyntaxToken> _tokens = Enumerable.Empty<ISyntaxToken>().ToList();
+    private IReadOnlyList<ISyntaxToken> _tokens = [];
     private int _position = 0;
     private int _minOperatorPriority = int.MaxValue;
     private int _maxOperatorPriority = int.MinValue;
@@ -65,7 +65,7 @@ public class Parser : IParser
         finally
         {
             _position = 0;
-            _tokens = Enumerable.Empty<ISyntaxToken>().ToList();
+            _tokens = [];
             _minOperatorPriority = int.MaxValue;
             _maxOperatorPriority = int.MinValue;
             _hasBinaryOperator = false;
@@ -75,30 +75,32 @@ public class Parser : IParser
 
     private void SetOperatorInfos()
     {
-        var binaryOperandsByPriority = _tokens
+        var binaryOperatorsByPriority = _tokens
             .Where(token => token is IBinaryOperatorToken)
             .Cast<IBinaryOperatorToken>()
-            .Select(operand => operand.BinaryPriority);
+            .Select(@operator => @operator.BinaryPriority)
+            .ToImmutableList();
 
-        _hasBinaryOperator = binaryOperandsByPriority.Any();
+        _hasBinaryOperator = !binaryOperatorsByPriority.IsEmpty;
 
         if (_hasBinaryOperator)
         {
-            _minOperatorPriority = binaryOperandsByPriority.Min();
-            _maxOperatorPriority = binaryOperandsByPriority.Max();
+            _minOperatorPriority = binaryOperatorsByPriority.Min();
+            _maxOperatorPriority = binaryOperatorsByPriority.Max();
         }
 
-        var unaryOperandsByPriority = _tokens
+        var unaryOperatorsByPriority = _tokens
             .Where(token => token is IUnaryOperatorToken)
             .Cast<IUnaryOperatorToken>()
-            .Select(operand => operand.UnaryPriority);
+            .Select(@operator => @operator.UnaryPriority)
+            .ToImmutableList();
 
-        _hasUnaryOperator = unaryOperandsByPriority.Any();
+        _hasUnaryOperator = !unaryOperatorsByPriority.IsEmpty;
 
         if (_hasUnaryOperator)
         {
-            _minOperatorPriority = Math.Min(unaryOperandsByPriority.Min(), _minOperatorPriority);
-            _maxOperatorPriority = Math.Max(unaryOperandsByPriority.Max(), _maxOperatorPriority);
+            _minOperatorPriority = Math.Min(unaryOperatorsByPriority.Min(), _minOperatorPriority);
+            _maxOperatorPriority = Math.Max(unaryOperatorsByPriority.Max(), _maxOperatorPriority);
         }
     }
 
