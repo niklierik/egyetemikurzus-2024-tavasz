@@ -61,4 +61,28 @@ public class TypeCollector : ITypeCollector
             )
             .ToImmutableList();
     }
+
+    public IReadOnlyList<Type> GetBinaryOpTokens(Assembly assembly)
+    {
+        return assembly
+            .GetTypes()
+            .Where(type =>
+                typeof(IBinaryOperatorToken).IsAssignableFrom(type)
+                && !type.IsInterface
+                && !type.IsAbstract
+            )
+            .ToImmutableList();
+    }
+
+    public IReadOnlyList<Type> GetUnaryOpTokens(Assembly assembly)
+    {
+        return assembly
+            .GetTypes()
+            .Where(type =>
+                typeof(IUnaryOperatorToken).IsAssignableFrom(type)
+                && !type.IsInterface
+                && !type.IsAbstract
+            )
+            .ToImmutableList();
+    }
 }

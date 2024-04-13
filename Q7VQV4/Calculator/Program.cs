@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using Calculator;
 using Calculator.Evaluators;
 using Calculator.Evaluators.ExpressionEvals;
 using Calculator.Interpreters;
@@ -55,6 +54,7 @@ hostApplicationBuilder.Services.AddSingleton<
 hostApplicationBuilder.Services.AddSingleton<ITypeCollector>(typeCollector);
 
 hostApplicationBuilder.Services.AddSingleton<IConfigMethod, ConfigMethod>();
+hostApplicationBuilder.Services.AddSingleton<IListOperatorsMethod, ListOperatorsMethod>();
 
 using var app = hostApplicationBuilder.Build();
 

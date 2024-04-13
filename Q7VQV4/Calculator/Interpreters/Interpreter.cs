@@ -70,6 +70,8 @@ public class Interpreter : IInterpreter
         State.Consts["state"] = State;
         State.Consts["config"] = State.Config;
         State.Methods["config"] = _serviceProvider.GetRequiredService<IConfigMethod>();
+        State.Methods["listOperators"] =
+            _serviceProvider.GetRequiredService<IListOperatorsMethod>();
     }
 
     public async Task<object?> ExecuteFile(string path)

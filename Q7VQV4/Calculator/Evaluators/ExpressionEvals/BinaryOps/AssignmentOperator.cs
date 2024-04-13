@@ -1,6 +1,5 @@
 using Calculator.Evaluators.Exceptions;
 using Calculator.Interpreters;
-using Calculator.State;
 using Calculator.Syntax.AST;
 using Calculator.Syntax.Tokens;
 

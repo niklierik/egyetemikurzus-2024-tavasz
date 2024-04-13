@@ -1,5 +1,3 @@
-using Calculator.Syntax.Tokens;
-
 namespace Calculator.Evaluators.ExpressionEvals.UnaryOps;
 
 [AttributeUsage(AttributeTargets.Class)]

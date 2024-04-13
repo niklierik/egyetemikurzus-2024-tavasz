@@ -59,6 +59,7 @@ public class InterpreterIntegrationTests
         serviceCollection.AddSingleton<IInterpreter, Interpreter>();
         serviceCollection.AddSingleton<IJsonService, JsonService>();
         serviceCollection.AddSingleton<IConfigMethod, ConfigMethod>();
+        serviceCollection.AddSingleton<IListOperatorsMethod, ListOperatorsMethod>();
 
         serviceCollection.AddSingleton<ITypeCollector, TypeCollector>();
 

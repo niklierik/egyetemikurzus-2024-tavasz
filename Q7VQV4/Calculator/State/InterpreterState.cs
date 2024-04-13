@@ -1,5 +1,3 @@
-using Calculator.State.Methods;
-
 namespace Calculator.State;
 
 public class InterpreterState

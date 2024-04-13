@@ -1,5 +1,3 @@
-using System.Runtime.Serialization;
-
 namespace Calculator.Evaluators;
 
 public class EvaluatorException : Exception
