@@ -1,10 +1,10 @@
 using System.Reflection;
-using Calculator;
 using Calculator.Evaluators;
 using Calculator.Interpreters;
 using Calculator.IO;
 using Calculator.IO.Logging;
 using Calculator.State;
+using Calculator.State.Methods;
 using Calculator.Syntax.Lexing;
 using Calculator.Syntax.Parser;
 using Calculator.Utils;
@@ -15,6 +15,8 @@ namespace CalculatorTests.Interpreters;
 
 public class InterpreterIntegrationTestFixture
 {
+    public Dictionary<string, object> Variables { get; set; } = new();
+
     public string Expression { get; set; } = "";
     public object? Expected { get; set; }
 }
@@ -22,7 +24,7 @@ public class InterpreterIntegrationTestFixture
 public class InterpreterIntegrationTests
 {
     IInterpreter _interpreter;
-    InterpreterState _state;
+    InterpreterConfig _config;
 
     [SetUp]
     public void SetUp()
@@ -56,6 +58,7 @@ public class InterpreterIntegrationTests
         serviceCollection.AddSingleton<IEvaluator, Evaluator>();
         serviceCollection.AddSingleton<IInterpreter, Interpreter>();
         serviceCollection.AddSingleton<IJsonService, JsonService>();
+        serviceCollection.AddSingleton<IConfigMethod, ConfigMethod>();
 
         serviceCollection.AddSingleton<ITypeCollector, TypeCollector>();
 
@@ -74,18 +77,16 @@ public class InterpreterIntegrationTests
             .Returns([]);
         serviceCollection.AddSingleton<ILogTargetProvider>(logTargetProviderMock.Object);
 
-        _state = new();
-        _state.Variables.Add("someVariable", 3.0);
-        _state.Variables.Add("anotherVariable", "asd");
-        var stateLoaderMock = new Mock<IConfigLoader<InterpreterState>>();
+        _config = new();
+        var stateLoaderMock = new Mock<IConfigLoader<InterpreterConfig>>();
         stateLoaderMock
             .Setup(stateLoader => stateLoader.Load(It.IsAny<string>()))
-            .ReturnsAsync(_state);
+            .ReturnsAsync(_config);
         stateLoaderMock.Setup(stateLoader =>
-            stateLoader.Save(It.IsAny<string>(), It.IsAny<InterpreterState>())
+            stateLoader.Save(It.IsAny<string>(), It.IsAny<InterpreterConfig>())
         );
 
-        serviceCollection.AddSingleton<IConfigLoader<InterpreterState>>(stateLoaderMock.Object);
+        serviceCollection.AddSingleton<IConfigLoader<InterpreterConfig>>(stateLoaderMock.Object);
 
         IServiceProvider provider = serviceCollection.BuildServiceProvider();
 
@@ -110,9 +111,20 @@ public class InterpreterIntegrationTests
         new() { Expression = "true", Expected = true },
         new() { Expression = "false", Expected = false },
         new() { Expression = "null", Expected = null },
-        new() { Expression = "someVariable", Expected = 3.0 },
-        new() { Expression = "someVariable + 3", Expected = 6.0 },
-        new() { Expression = "anotherVariable", Expected = "asd" },
+        new() { Expression = "someVariable = 3", Expected = 3.0 },
+        new() { Expression = "anotherVariable = \"asd\"", Expected = "asd" },
+        new()
+        {
+            Variables = new() { { "anotherVariable", "asd" } },
+            Expression = "anotherVariable",
+            Expected = "asd"
+        },
+        new()
+        {
+            Variables = new() { { "anotherVariable", 2.0 } },
+            Expression = "anotherVariable + 3",
+            Expected = 5.0
+        },
         new() { Expression = "missingVariable", Expected = null },
         new() { Expression = "a = 3", Expected = 3.0 },
         new() { Expression = "\"asd\"", Expected = "asd" },
@@ -122,6 +134,15 @@ public class InterpreterIntegrationTests
     public async Task Execute(InterpreterIntegrationTestFixture fixture)
     {
         await _interpreter.Init();
+
+        if (fixture.Variables is not null)
+        {
+            foreach (var (key, value) in fixture.Variables)
+            {
+                _interpreter.State.Variables[key] = value;
+            }
+        }
+
         var actual = await _interpreter.Execute(fixture.Expression);
 
         Assert.That(actual, Is.EqualTo(fixture.Expected).Within(0.000001));
