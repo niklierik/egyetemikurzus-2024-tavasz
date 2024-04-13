@@ -1,7 +1,6 @@
 using System.Collections.Immutable;
 using System.Globalization;
 using System.Reflection;
-using Calculator.Source;
 using Calculator.State;
 using Calculator.Syntax.Tokens;
 using Calculator.Utils;
@@ -9,10 +8,30 @@ using Newtonsoft.Json;
 
 namespace Calculator.Syntax.Lexing;
 
+internal record class ConstantStringType
+{
+    public Type Type { get; }
+    public string MatchTo { get; }
+
+    public ConstantStringType(Type type)
+    {
+        var attribute = type.GetCustomAttribute<ConstantStringTokenAttribute>();
+        if (attribute is null)
+        {
+            // this should never trigger
+            throw new InvalidOperationException(
+                $"Unable to load lexer as the token marked constant string misses the attribute: {type}"
+            );
+        }
+        Type = type;
+        MatchTo = attribute.MatchTo;
+    }
+}
+
 // TODO: remove state
 public class Lexer : ILexer
 {
-    private readonly IReadOnlyList<(Type type, string toMatch)> _constantStringTokens;
+    private readonly IReadOnlyList<ConstantStringType> _constantStringTokens;
     private readonly IJsonService _jsonService;
     private int _currentPosition = 0;
     private string _text = "";
@@ -22,19 +41,8 @@ public class Lexer : ILexer
     {
         _constantStringTokens = typeCollector
             .GetConstantStringTokens(GetType().Assembly)
-            .Select(type =>
-            {
-                var attribute = type.GetCustomAttribute<ConstantStringTokenAttribute>();
-                if (attribute is null)
-                {
-                    // this should never trigger
-                    throw new InvalidOperationException(
-                        $"Unable to load lexer as the token marked constant string misses the attribute: {type}"
-                    );
-                }
-                return (type: type, toMatch: attribute.MatchTo);
-            })
-            .OrderByDescending(tuple => tuple.toMatch.Length)
+            .Select(type => new ConstantStringType(type))
+            .OrderByDescending(constantStringType => constantStringType.MatchTo.Length)
             .ToImmutableList();
         _jsonService = jsonService;
     }
@@ -68,13 +76,12 @@ public class Lexer : ILexer
             _currentPosition++;
         }
 
-        var (type, _) = _constantStringTokens.FirstOrDefault(
-            (tuple) => tuple.toMatch == identifier,
-            (null!, "")
+        var constantStringType = _constantStringTokens.FirstOrDefault(
+            (tuple) => tuple.MatchTo == identifier
         );
-        if (type is not null)
+        if (constantStringType is not null)
         {
-            var instance = Activator.CreateInstance(type);
+            var instance = Activator.CreateInstance(constantStringType.Type);
             if (instance is ISyntaxToken token)
             {
                 return token;
@@ -165,8 +172,10 @@ public class Lexer : ILexer
 
     private ISyntaxToken? LexConstantStringToken()
     {
-        foreach (var (type, matchTo) in _constantStringTokens)
+        foreach (var constantStringType in _constantStringTokens)
         {
+            var type = constantStringType.Type;
+            var matchTo = constantStringType.MatchTo;
             if (_currentPosition + matchTo.Length > _text.Length)
             {
                 continue;
