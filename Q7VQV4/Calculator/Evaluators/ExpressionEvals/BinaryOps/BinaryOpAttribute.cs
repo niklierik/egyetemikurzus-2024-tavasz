@@ -2,7 +2,8 @@ namespace Calculator.Evaluators.ExpressionEvals.BinaryOps;
 
 [AttributeUsage(AttributeTargets.Class)]
 public class BinaryOpAttribute(Type type, bool keepLeftTree = false, bool keepRightTree = false)
-    : Attribute
+    : Attribute,
+        IOperatorAttribute
 {
     public Type OperatorType { get; } = type;
     public bool KeepLeftTree { get; } = keepLeftTree;

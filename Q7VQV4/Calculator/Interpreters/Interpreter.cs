@@ -99,15 +99,7 @@ public class Interpreter : IInterpreter
             StringBuilder prettyAstBuilder = new StringBuilder(Environment.NewLine);
             await _nodePrettyPrinter.Print(
                 ast,
-                (text, color) =>
-                {
-                    if (State.Config.PrintAstToConsole)
-                    {
-                        _host.Write(text, color);
-                    }
-                    prettyAstBuilder.Append(text);
-                    return Task.CompletedTask;
-                }
+                (text, color) => PrintAstNode(text, color, prettyAstBuilder)
             );
 
             await _logger.Debug(prettyAstBuilder.ToString());
@@ -160,6 +152,16 @@ public class Interpreter : IInterpreter
             }
             return e;
         }
+    }
+
+    private Task PrintAstNode(string text, ConsoleColor color, StringBuilder prettyAstBuilder)
+    {
+        if (State.Config.PrintAstToConsole)
+        {
+            _host.Write(text, color);
+        }
+        prettyAstBuilder.Append(text);
+        return Task.CompletedTask;
     }
 
     private async Task LoadInitScripts()

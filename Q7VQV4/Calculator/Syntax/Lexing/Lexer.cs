@@ -114,7 +114,6 @@ public class Lexer : ILexer
         }
 
         string rawValue = "";
-        int start = _currentPosition;
         while (CurrentChar == '.' || char.IsDigit(CurrentChar))
         {
             rawValue += CurrentChar;
@@ -137,7 +136,6 @@ public class Lexer : ILexer
         }
 
         string rawValue = "\"";
-        int start = _currentPosition;
         _currentPosition++;
         bool breaking = false;
         while (breaking || CurrentChar != '\"')

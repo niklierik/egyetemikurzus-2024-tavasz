@@ -63,18 +63,7 @@ public class ImportExpressionEvaluator(IInterpreter interpreter) : ISubEvaluator
         if (!isAll)
         {
             imports = importExpressionNode
-                .Args.Select(arg =>
-                {
-                    var name = arg.Token switch
-                    {
-                        IdentifierToken id => id.Content,
-                        _
-                            => throw new SyntaxException(
-                                "Import statement must be followed with any number and combination of Identifier, a '*' and the last symbol must be a 'from' keyword."
-                            )
-                    };
-                    return (name, name);
-                })
+                .Args.Select(ExtractIdentifierTokenFromLeafNode)
                 .Where(arg => !knownModifiers.Contains(arg.Item1));
         }
         else
@@ -141,5 +130,18 @@ public class ImportExpressionEvaluator(IInterpreter interpreter) : ISubEvaluator
         }
 
         return Task.FromResult<object?>(null);
+    }
+
+    private static (string, string) ExtractIdentifierTokenFromLeafNode(LeafNode arg)
+    {
+        var name = arg.Token switch
+        {
+            IdentifierToken id => id.Content,
+            _
+                => throw new SyntaxException(
+                    "Import statement must be followed with any number and combination of Identifier, a '*' and the last symbol must be a 'from' keyword."
+                )
+        };
+        return (name, name);
     }
 }
