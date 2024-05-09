@@ -145,7 +145,10 @@ public class Lexer : ILexer
                 breaking = true;
                 rawValue += CurrentChar;
                 _currentPosition++;
+                continue;
             }
+
+            breaking = false;
 
             rawValue += CurrentChar;
             _currentPosition++;
